@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,11 @@ import org.apache.commons.csv.CSVRecord;
  * 
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>  
  * <b>description:</b> <br>
+ * validPath receives a path to directory that contains csv file\s
+ * from the user. <br>
+ * validates the path, and for each correct csv file,
+ * calls the function readCSV() in fromCSV class.
+ * 
  * readCSV uses Commons Apache library, receives a path and a file name which the
  * function vp(validPath) send to it (which checked if it contain/s CSV file/s) <br>
  * and validate if the CSV file is in the right format for our request. <br>
@@ -22,6 +28,35 @@ import org.apache.commons.csv.CSVRecord;
 
 public class fromCSV {
 
+	/**
+	 * 
+	 * @param path - holds the user input for the csv directory.
+	 * 
+	 */
+
+	
+	public static void validPath(String path) {
+		int counter = 0;
+		File f = new File(path);
+		if(f.isDirectory()) {
+			File[] a = f.listFiles();
+			for(int i = 0; i < a.length; i++) {
+				String fileName = a[i].getName();
+				String extension = "";
+				int k = fileName.lastIndexOf('.');
+				if (k > 0)
+					extension = fileName.substring(k+1);
+				if(extension.compareTo("csv") == 0) {
+					fromCSV.readCSV(path, fileName);
+					counter++;
+				}
+			}
+			if(counter == 0)
+				System.out.println("there is no CSV files");
+		}
+		else 
+			System.out.println(path + " is Not a Directory");
+	}
 
 	/**
 	 * 
@@ -32,17 +67,13 @@ public class fromCSV {
 	 */
 	static void readCSV(String path, String fileName) {
 		try {
-			boolean validCSV = true;
 			FileReader in = new FileReader(path + fileName);
 			BufferedReader bufferedReader = new BufferedReader(in);
 			String csvSplitBy = ",";
-			String[] wifi = bufferedReader.readLine().split(csvSplitBy);
-			String model = "";
-			if(wifi.length > 2 && wifi[2].contains("model"))
-				model = model + wifi[2].substring(6, wifi[2].length());
-			else validCSV = false;
-			Hashtable<String, networks> strongPoints =  new Hashtable<>(); ////K. V
-			if(validCSV) {
+			String[] catchModel = bufferedReader.readLine().split(csvSplitBy);	
+			Hashtable<String, networks> strongPoints =  new Hashtable<>();
+			if(catchModel.length > 2 && catchModel[2].contains("model")) {
+				String model = catchModel[2].substring(6, catchModel[2].length());
 				Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
 				networks network = new networks();
 				for (CSVRecord record : records) {
@@ -55,7 +86,7 @@ public class fromCSV {
 					double lon = Double.parseDouble(record.get("CurrentLongitude"));
 					double alt = Double.parseDouble(record.get("AltitudeMeters"));
 					// System.out.println(mac + ssid + time + channel + signal + lat + lon + alt);
-					
+
 					if(strongPoints.containsKey(time))
 						strongPoints.get(time).add(ssid, mac, signal, channel);
 					else {
@@ -63,18 +94,9 @@ public class fromCSV {
 						network.add(ssid, mac, signal, channel);
 						strongPoints.put(time, network);
 					}
-					
-//					if(network.getTime().equals(time))
-//						network.add(ssid, mac, signal, channel);
-//					else {
-//						if(!network.getTime().equals(""))
-//							toCSV.writeCsvFile(network, path + "newUpgradedCSV.csv");
-//						network = new networks(model, time, lat, lon, alt);
-//						network.add(ssid, mac, signal, channel);
-//					}
 				}
 				toCSV.writeCsvFile(strongPoints, path + "newUpgradedCSV.csv");
-				
+
 			}
 			else System.out.println(fileName + " is not a valid CSV format !");
 
@@ -82,8 +104,7 @@ public class fromCSV {
 			// TODO Auto-generated catch block
 			System.out.println(fileName + " is not a valid CSV file !");
 		}
-		
+
 
 	}
-
 }

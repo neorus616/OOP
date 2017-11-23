@@ -27,29 +27,12 @@ public class fromNewCSV {
 
 	public static void filterCSV(String path, String filter) {
 		try {
-			boolean validFilter = true;
-			boolean validCSV = false;
-			String extension = "";
-			File f = new File(path);
 			Map<String, networks> strongPoints = new HashMap<>();
-			if(f.isFile())
-				validCSV = true;
-			if(validCSV && (filter.contains("id") || filter.contains("time") || filter.contains("location")))
-				validCSV = true;
-			else if(validCSV)
-				validFilter = false;
-			int k = path.lastIndexOf('.');
-			if (k > 0)
-				 extension = path.substring(k+1);
-			if(extension.compareTo("csv") != 0)
-				validCSV = false;
-			k = path.lastIndexOf("/");
-			int j = path.lastIndexOf("\\");
-			String newPath = k<j ? path.substring(0,j+1) : path.substring(0,k+1);
-			k = filter.lastIndexOf('=');
+			String newPath = newPath(path);
+			int k = filter.lastIndexOf('=');
 			String filterBy = filter.substring(0,k).trim(); //id or location or time
 			filter = filter.substring(k+1).trim(); //which id or location or time
-			if(validCSV) {
+			if(validCSV(path, filter)) {
 			FileReader in = new FileReader(path);
 			BufferedReader bufferedReader = new BufferedReader(in);
 			Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
@@ -81,11 +64,35 @@ public class fromNewCSV {
 			toKML.writeKMLFile(strongPoints, newPath + "newUpgradedKML.kml");
 			}
 			else System.out.println("not a valid CSV file !");
-			if(!validFilter) System.out.println("not a valid filter");
 			
 		} catch (IOException | IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			System.out.println("not a valid CSV file !");
 		}
+	}
+	private static boolean validCSV(String path, String filter) {
+		boolean validFilter = true;
+		boolean validCSV = false;
+		String extension = "";
+		File f = new File(path);
+		if(f.isFile())
+			validCSV = true;
+		if(validCSV && (filter.contains("id") || filter.contains("time") || filter.contains("location")))
+			validCSV = true;
+		else if(validCSV)
+			validFilter = false;
+		int k = path.lastIndexOf('.');
+		if (k > 0)
+			 extension = path.substring(k+1);
+		if(extension.compareTo("csv") != 0)
+			validCSV = false;
+		return validCSV&&validFilter;
+	}
+	
+	private static String newPath(String path) {
+		int k = path.lastIndexOf("/");
+		int j = path.lastIndexOf("\\");
+		String newPath = k<j ? path.substring(0,j+1) : path.substring(0,k+1);
+		return newPath;
 	}
 }

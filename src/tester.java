@@ -5,7 +5,7 @@ public class tester {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		validPath.vp("C:\\Users\\Lowhacker\\Desktop\\csv\\");
+		fromCSV.validPath("C:\\Users\\Lowhacker\\Desktop\\csv\\");
 		//fromNewCSV.filterCSV("C:/Users\\Lowhacker/Desktop/csv\\newUpgradedCSV.csv", "id = mx6");
 	}
 

@@ -53,6 +53,7 @@ class toCSV {
 			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 			//Create CSV file header
 			csvFilePrinter.printRecord(FILE_HEADER);
+
 			for (String network : strongPoints.keySet()){
 				List networkDataRecord = new ArrayList();
 				networkDataRecord.add(strongPoints.get(network).getTime());
