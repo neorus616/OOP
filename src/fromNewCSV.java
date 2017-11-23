@@ -32,7 +32,7 @@ public class fromNewCSV {
 			int k = filter.lastIndexOf('=');
 			String filterBy = filter.substring(0,k).trim(); //id or location or time
 			filter = filter.substring(k+1).trim(); //which id or location or time
-			if(validCSV(path, filter)) {
+			if(validCSV(path, filterBy)) {
 			FileReader in = new FileReader(path);
 			BufferedReader bufferedReader = new BufferedReader(in);
 			Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);

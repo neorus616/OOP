@@ -47,6 +47,7 @@ public class fromCSV {
 				if (k > 0)
 					extension = fileName.substring(k+1);
 				if(extension.compareTo("csv") == 0) {
+					System.out.println(fileName);
 					fromCSV.readCSV(path, fileName);
 					counter++;
 				}
@@ -85,8 +86,7 @@ public class fromCSV {
 					double lat = Double.parseDouble(record.get("CurrentLatitude"));
 					double lon = Double.parseDouble(record.get("CurrentLongitude"));
 					double alt = Double.parseDouble(record.get("AltitudeMeters"));
-					// System.out.println(mac + ssid + time + channel + signal + lat + lon + alt);
-
+					System.out.println(model + mac + ssid + time + channel + signal + lat + lon + alt);
 					if(strongPoints.containsKey(time))
 						strongPoints.get(time).add(ssid, mac, signal, channel);
 					else {
@@ -96,7 +96,6 @@ public class fromCSV {
 					}
 				}
 				toCSV.writeCsvFile(strongPoints, path + "newUpgradedCSV.csv");
-
 			}
 			else System.out.println(fileName + " is not a valid CSV format !");
 
@@ -104,7 +103,5 @@ public class fromCSV {
 			// TODO Auto-generated catch block
 			System.out.println(fileName + " is not a valid CSV file !");
 		}
-
-
 	}
 }
