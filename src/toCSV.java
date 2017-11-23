@@ -57,8 +57,9 @@ class toCSV {
 			//initialize CSVPrinter object 
 			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 			//Create CSV file header
+			csvFilePrinter.printRecord(FILE_HEADER);
 			if(isFirstRun) {
-				csvFilePrinter.printRecord(FILE_HEADER);
+				
 				isFirstRun = false;
 			}
 			
