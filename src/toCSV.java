@@ -18,8 +18,6 @@ import org.apache.commons.csv.CSVPrinter;
  */
 
 class toCSV {
-	//First run checker
-	static boolean isFirstRun = false;
 	//Delimiter used in CSV file
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	//CSV file header
@@ -48,9 +46,6 @@ class toCSV {
 		CSVPrinter csvFilePrinter = null;
 		//Create the CSVFormat object with "\n" as a record delimiter
 		CSVFormat csvFileFormat = CSVFormat.DEFAULT.withRecordSeparator(NEW_LINE_SEPARATOR);
-		File f = new File(fileName);
-		if(!f.exists()) 
-			isFirstRun = true;
 		try {
 			//initialize FileWriter object	
 			fileWriter = new FileWriter(fileName);
@@ -58,11 +53,6 @@ class toCSV {
 			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 			//Create CSV file header
 			csvFilePrinter.printRecord(FILE_HEADER);
-			if(isFirstRun) {
-				
-				isFirstRun = false;
-			}
-			
 			for (String network : strongPoints.keySet()){
 				List networkDataRecord = new ArrayList();
 				networkDataRecord.add(strongPoints.get(network).getTime());
