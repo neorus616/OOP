@@ -1,12 +1,12 @@
-import java.util.HashMap;
-import java.util.Map;
 
 public class tester {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
-		//fromCSV.validPath("G:\\csv\\");
-		fromNewCSV.filterCSV("G:\\csv\\newUpgradedCSV.csv", "id =Lenovo PB2-690Y");
+		
+		//fromCSV.validPath("C:\\Users\\Lowhacker\\Downloads\\CSV\\");
+		//Thread.sleep(2000);
+		fromNewCSV.filterCSV("C:\\Users\\Lowhacker\\Downloads\\CSV\\newUpgradedCSV.csv", "ONEPLUS A3003");
 	}
 
 }

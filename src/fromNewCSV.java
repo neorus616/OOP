@@ -14,11 +14,12 @@ import org.apache.commons.csv.CSVRecord;
  * <b>description:</b> <br>
  * filterCSV receives file and a filter which will be used for filtering the content
  * of the file into a hashmap.
- * validate 
+ * the function newPath get the directory of the file.
+ * the function validCSV validate the path and the filter.
  */
 
 public class fromNewCSV {
-	
+
 	/**
 	 * 
 	 * @param path - holds the file path.
@@ -33,43 +34,51 @@ public class fromNewCSV {
 			String filterBy = filter.substring(0,k).trim(); //id or location or time
 			filter = filter.substring(k+1).trim(); //which id or location or time
 			if(validCSV(path, filterBy)) {
-			FileReader in = new FileReader(path);
-			BufferedReader bufferedReader = new BufferedReader(in);
-			Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
-			networks network = new networks();
-			for (CSVRecord record : records) {
-				String time = record.get("Time");
-				double lat = Double.parseDouble(record.get("Lat"));
-				double lon = Double.parseDouble(record.get("Lon"));
-				double alt = Double.parseDouble(record.get("Alt"));
-				String id = record.get("ID");
-				for (int i = 1; i <= Integer.parseInt(record.get("#WIFI Networks")); i++) {
-					String mac = record.get("MAC" + i);
-					String ssid = record.get("SSID" + i);
-					int channel = Integer.parseInt(record.get("Frequncy" + i));
-					int signal = Integer.parseInt(record.get("Signal" + i));
-					network = new networks(id, time, lat, lon, alt);
-					network.add(ssid, mac, signal, channel);
-					if(network.filter(filterBy, filter)) {
-						if(!strongPoints.containsKey(network.getPoints().get(0).getMAC())) {
-							strongPoints.put(network.getPoints().get(0).getMAC(), network);
+				FileReader in = new FileReader(path);
+				BufferedReader bufferedReader = new BufferedReader(in);
+				Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
+				networks network = new networks();
+				for (CSVRecord record : records) {
+					String time = record.get("Time");
+					double lat = Double.parseDouble(record.get("Lat"));
+					double lon = Double.parseDouble(record.get("Lon"));
+					double alt = Double.parseDouble(record.get("Alt"));
+					String id = record.get("ID");
+					for (int i = 1; i <= Integer.parseInt(record.get("#WIFI Networks")); i++) {
+						String mac = record.get("MAC" + i);
+						String ssid = record.get("SSID" + i);
+						int channel = Integer.parseInt(record.get("Frequncy" + i));
+						int signal = Integer.parseInt(record.get("Signal" + i));
+						network = new networks(id, time, lat, lon, alt);
+						network.add(ssid, mac, signal, channel);
+						if(network.filter(filterBy, filter)) {
+							if(!strongPoints.containsKey(network.getPoints().get(0).getMAC())) {
+								strongPoints.put(network.getPoints().get(0).getMAC(), network);
+							}
+							else if(network.getPoints().get(0).compareTo(strongPoints.get(network.getPoints().get(0).getMAC()).getPoints().get(0)) == 1) {
+								strongPoints.remove(network.getPoints().get(0).getMAC());
+								strongPoints.put(network.getPoints().get(0).getMAC(), network);
+							}	
 						}
-						else if(network.getPoints().get(0).compareTo(strongPoints.get(network.getPoints().get(0).getMAC()).getPoints().get(0)) == 1) {
-							strongPoints.remove(network.getPoints().get(0).getMAC());
-							strongPoints.put(network.getPoints().get(0).getMAC(), network);
-						}	
 					}
 				}
+				toKML.writeKMLFile(strongPoints, newPath + "newUpgradedKML.kml");
 			}
-			toKML.writeKMLFile(strongPoints, newPath + "newUpgradedKML.kml");
-			}
-			else System.out.println("not a valid CSV file !");
-			
-		} catch (IOException | IllegalArgumentException e) {
+			else throw new IllegalArgumentException("Not a valid CSV file !");
+
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("not a valid CSV file !");
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Not a valid CSV file !");
+		} catch (StringIndexOutOfBoundsException e) {
+			throw new StringIndexOutOfBoundsException("Wrong filter statement ! \n try like this: \"id/date/location = Lenovo PB2-690Y/2017-10-27 16:13:51/32.16,34.80,46.34\" ");
 		}
 	}
+	
+	/*
+	 * Validates the path and filter in the correct form of "/CSV/sample.csv" and "id\date\location = xyz"
+	 */
 	private static boolean validCSV(String path, String filter) {
 		boolean validFilter = true;
 		boolean validCSV = false;
@@ -77,18 +86,21 @@ public class fromNewCSV {
 		File f = new File(path);
 		if(f.isFile())
 			validCSV = true;
-		if(validCSV && (filter.contains("id") || filter.contains("time") || filter.contains("location")))
+		if(validCSV && (filter.contains("id") || filter.contains("date") || filter.contains("location")))
 			validCSV = true;
 		else if(validCSV)
 			validFilter = false;
 		int k = path.lastIndexOf('.');
 		if (k > 0)
-			 extension = path.substring(k+1);
+			extension = path.substring(k+1);
 		if(extension.compareTo("csv") != 0)
 			validCSV = false;
 		return validCSV&&validFilter;
 	}
-	
+
+	/*
+	 * Gets the directory where the combined CSV is located(to save later the KML file).
+	 */
 	private static String newPath(String path) {
 		int k = path.lastIndexOf("/");
 		int j = path.lastIndexOf("\\");

@@ -47,16 +47,21 @@ public class fromCSV {
 				if (k > 0)
 					extension = fileName.substring(k+1);
 				if(extension.compareTo("csv") == 0) {
-					System.out.println(fileName);
+					//System.out.println(fileName);
 					fromCSV.readCSV(path, fileName);
 					counter++;
 				}
 			}
-			if(counter == 0)
-				System.out.println("there is no CSV files");
+			if(counter == 0) {
+				throw new IllegalArgumentException("there is no CSV files");
+				//System.out.println("there is no CSV files");
+			}
 		}
-		else 
-			System.out.println(path + " is Not a Directory");
+		else {
+			throw new IllegalArgumentException(path + " is Not a Directory");
+			//System.out.println(path + " is Not a Directory");
+		}
+			
 	}
 
 	/**
@@ -99,8 +104,8 @@ public class fromCSV {
 			else System.out.println(fileName + " is not a valid CSV format !");
 
 		} catch (IOException | IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			System.out.println(fileName + " is not a valid CSV file !");
+			throw new IllegalArgumentException(fileName + " is not a valid CSV file !");
+			
 		}
 	}
 }
