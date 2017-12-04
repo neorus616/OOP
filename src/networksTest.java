@@ -39,7 +39,27 @@ class networksTest {
 
 	@Test
 	final void testGetPoints() {
-		fail("Not yet implemented"); // TODO
+		wifi p1 = new wifi("ssid1","mac", -80, 10);
+		xpoints.add(p1);
+		wifi p2 = new wifi("ssid2","mac", -65, 10);
+		xpoints.add(p2);
+		wifi p3 = new wifi("ssid3","mac", -99, 10);
+		xpoints.add(p3);
+		wifi p4 = new wifi("ssid11","mac", -83, 10);
+		xpoints.add(p4);
+		wifi p5 = new wifi("ssid5","mac", -98, 10);
+		xpoints.add(p5);
+		wifi p6 = new wifi("ssid6","mac", -99, 10);
+		xpoints.add(p6);
+		wifi p7 = new wifi("ssid7","mac", -87, 10);
+		xpoints.add(p7);
+		wifi p8 = new wifi("ssid8","mac", -75, 10);
+		xpoints.add(p8);
+		wifi p9 = new wifi("ssid9","mac", -88, 10);
+		xpoints.add(p9);
+		wifi p10 = new wifi("ssid10","mac", -93, 10);
+		xpoints.add(p10);
+		assertEquals(networkTest.getPoints(),xpoints);
 	}
 
 	@Test
