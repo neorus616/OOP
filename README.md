@@ -1,6 +1,6 @@
 # OOP Project
 In this project we will analyze info from a given CSV files to match the user conditions.
-the CSV files that we analyze are from an android application called "WiGLE WiFi", the files contains parameters such as location(lat, lon and alt), time(in YYYY-MM-DD HH:mm:ss format), ID(model of the phone usually) and the WiFi AP points which contain the SSID, MAC address, frequency and signal strength.
+the CSV files that we analyze are from an android application called "WiGLE WiFi", the files contains parameters such as location(lat, lon and alt), time(in YYYY-MM-dd HH:mm:ss format), ID(model of the phone usually) and the WiFi AP points which contain the SSID, MAC address, frequency and signal strength.
 
 ## Libraries:
 Commons CSV by Apache Commons - http://commons.apache.org/proper/commons-csv/download_csv.cgi to read the CSV files. <br>
@@ -13,3 +13,4 @@ To create a KML file, use the function YYY with the parameters "Folder path" and
 **ID:** to filter all the AP that have been scanned from the phone "ONEPLUS A3003" for example, run the function YYY("C:\CSV\CombCSV.csv", "ID = ONEPLUS A3003"). <br>
 **Date:** to filter all the AP that have been scanned from 2017-10-27 16:27:03 until 2017-10-27 16:37:03 for example, run the function YYY("C:\CSV\CombCSV.csv", "date = 2017-10-27 16:27:03,date = 2017-10-27 16:37:03"). <br>
 **location:** to filter all the AP that have been scanned around 32.16876665,34.81320794 within radius of 100 meters for example, run the function YYY("C:\CSV\CombCSV.csv", "location = 32.16876665,34.81320794,100"). <br>
+The KML file is located in the source folder where the Combined CSV file, you can run it on [Google Earth website](https://earth.google.com/web/) via Chrome(or their software to see also the timeline). <br>
