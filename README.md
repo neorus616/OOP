@@ -14,3 +14,13 @@ To create a KML file, use the function YYY with the parameters "Folder path" and
 **Date:** to filter all the AP that have been scanned from 2017-10-27 16:27:03 until 2017-10-27 16:37:03 for example, run the function YYY("C:\CSV\CombCSV.csv", "date = 2017-10-27 16:27:03,date = 2017-10-27 16:37:03"). <br>
 **location:** to filter all the AP that have been scanned around 32.16876665,34.81320794 within radius of 100 meters for example, run the function YYY("C:\CSV\CombCSV.csv", "location = 32.16876665,34.81320794,100"). <br>
 The KML file is located in the source folder where the Combined CSV file, you can run it on [Google Earth website](https://earth.google.com/web/) via Chrome(or their software to see also the timeline). <br>
+
+
+
+## Assigments:
+- [x] Design and implement the code for Assigment 0
+- [x] Write javadoc\Descriptions
+- [x] Create Github  and upload our repository for Assigment 1
+- [X] Upload CSV and KML samples
+- [X] Write README.md
+- [ ] Add algorithms for Assigment 2 
