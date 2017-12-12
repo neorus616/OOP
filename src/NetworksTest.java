@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-class NetworksTest {
+class networksTest {
 
-	Networks networkTest = new Networks("ID", "Time", 0, 0, 0);
-	ArrayList<Wifi> xpoints = new ArrayList<Wifi>();
+	networks networkTest = new networks("ID", "Time", 0, 0, 0);
+	ArrayList<wifi> xpoints = new ArrayList<wifi>();
 	
 	
 	@Test
@@ -39,28 +39,52 @@ class NetworksTest {
 
 	@Test
 	final void testGetPoints() {
-		Wifi p1 = new Wifi("ssid1","mac", -80, 10);
+		wifi p1 = new wifi("ssid1","mac", -80, 10);
 		xpoints.add(p1);
-		Wifi p2 = new Wifi("ssid2","mac", -65, 10);
+		wifi p2 = new wifi("ssid2","mac", -65, 10);
 		xpoints.add(p2);
-		Wifi p3 = new Wifi("ssid3","mac", -99, 10);
+		wifi p3 = new wifi("ssid3","mac", -99, 10);
 		xpoints.add(p3);
-		Wifi p4 = new Wifi("ssid11","mac", -83, 10);
+		wifi p4 = new wifi("ssid11","mac", -83, 10);
 		xpoints.add(p4);
-		Wifi p5 = new Wifi("ssid5","mac", -98, 10);
+		wifi p5 = new wifi("ssid5","mac", -98, 10);
 		xpoints.add(p5);
-		Wifi p6 = new Wifi("ssid6","mac", -99, 10);
+		wifi p6 = new wifi("ssid6","mac", -99, 10);
 		xpoints.add(p6);
-		Wifi p7 = new Wifi("ssid7","mac", -87, 10);
+		wifi p7 = new wifi("ssid7","mac", -87, 10);
 		xpoints.add(p7);
-		Wifi p8 = new Wifi("ssid8","mac", -75, 10);
+		wifi p8 = new wifi("ssid8","mac", -75, 10);
 		xpoints.add(p8);
-		Wifi p9 = new Wifi("ssid9","mac", -88, 10);
+		wifi p9 = new wifi("ssid9","mac", -88, 10);
 		xpoints.add(p9);
-		Wifi p10 = new Wifi("ssid10","mac", -93, 10);
+		wifi p10 = new wifi("ssid10","mac", -93, 10);
 		xpoints.add(p10);
 		assertEquals(networkTest.getPoints(),xpoints);
 	}
 
+	@Test
+	final void testCheckSignal() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	final void testIsId() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	final void testIsLocation() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	final void testIsTime() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	final void testFilter() {
+		fail("Not yet implemented"); // TODO
+	}
 
 }
