@@ -3,7 +3,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.function.Predicate;  
 
-public class networks {
+public class Networks {
 
 	String _id = "";
 	String _time = "";
