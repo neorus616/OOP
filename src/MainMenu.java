@@ -10,8 +10,8 @@ public class MainMenu {
 
 	public static void main(String[] args){
 		// TODO Auto-generated method stub
-		
-		ImportCSV.validPath("CSV\\");
+		System.out.println("test");
+		//ImportCSV.validPath("CSV\\");
 		//ImportCombinedCSV.filterCSV("CSV\\newUpgradedCSV.csv", "date = 2017-10-27 16:27:03,2017-10-27 16:37:03");
 	}
 
