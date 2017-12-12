@@ -1,5 +1,7 @@
 # OOP Project
-In this project we will analyze info from a given CSV files to match the user conditions.
+The main purpose of this project is to develop complex system that allows gathering geographic information,
+producing insights from this information and displaying the information in graphic tools.
+we will analyze info from a given CSV files to match the user conditions.
 the CSV files that we analyze are from an android application called "WiGLE WiFi", the files contains parameters such as location(lat, lon and alt), time(in YYYY-MM-dd HH:mm:ss format), ID(model of the phone usually) and the WiFi AP points which contain the SSID, MAC address, frequency and signal strength.
 
 ## Libraries:
