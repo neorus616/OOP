@@ -15,7 +15,7 @@ public class EstimateLoc {
 
 	public static void main(String[] args){
 
-		userEstimateLoc("C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\Algo2_test_BM1_4_3.csv","C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\_comb_no_gps_ts2_.csv" ,"C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\Loc.csv", 3);
+		userEstimateLoc("C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\_comb_all_.csv","C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\_comb_no_gps_ts2_.csv" ,"C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\Loc.csv", 3);
 	}
 
 	public static void apEstimateLoc(String db, String wifiscans, String filename, int k) {
