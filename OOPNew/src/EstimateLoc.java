@@ -2,6 +2,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
 public class EstimateLoc {
 
@@ -10,43 +14,48 @@ public class EstimateLoc {
 	final static double  SIG_DIFF = 0.4;
 
 	public static void main(String[] args){
-			
-		Networks userNetwork = new Networks("ID", "Time", 0, 0, 0);
-		userNetwork.add("temp1", "c0:ac:54:f5:b4:c9", -50, 10);
-		userNetwork.add("temp2", "b4:ee:b4:86:c0:f1", -70, 10);
-		userNetwork.add("temp3", "80:1f:02:f5:d8:e8", -90, 10);
-		
-		String fileName = "C:\\Users\\Lowhacker\\Desktop\\book1.csv";
-		searchPi(fileName, userNetwork, 3);
-		
+
+		userEstimateLoc("C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\Algo2_test_BM1_4_3.csv","C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\_comb_no_gps_ts2_.csv" ,"C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\Loc.csv", 3);
 	}
-	
+
 	public static void apEstimateLoc(String db, String wifiscans, String filename, int k) {
-		
+
 	}
 
 	public static void userEstimateLoc(String db, String wifiscans, String filename, int k) {
 		try {
-		      FileReader fr = new FileReader(wifiscans);
-		      BufferedReader csv_br = new BufferedReader(fr);
-		      String line = "";
-		      while ((line = csv_br.readLine()) != null) {
-		        try {
-		        	
-		        }
-		        catch (Exception e)
-		        {
-		          System.err.println("ERR reading line " + ") Line: " + line);
-		        }
-		      }
-		    }
-		    catch (Exception e) {
-		      e.printStackTrace();
-		    }
+			FileReader fr = new FileReader(wifiscans);
+			BufferedReader bufferedReader = new BufferedReader(fr);
+			Hashtable<String, Networks> userLoc =  new Hashtable<>();
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
+			Networks network = new Networks();
+			for (CSVRecord record : records) {
+				String time = record.get("Time");
+				//					double lat = Double.parseDouble(record.get("Lat"));
+				//					double lon = Double.parseDouble(record.get("Lon"));
+				//					double alt = Double.parseDouble(record.get("Alt"));
+				String id = record.get("ID");
+				network = new Networks(id, time, 0,0,0);
+				for (int i = 1; i <= Integer.parseInt(record.get("#WIFI Networks")); i++) {
+					String mac = record.get("MAC" + i);
+					String ssid = record.get("SSID" + i);
+					int channel = Integer.parseInt(record.get("Frequncy" + i));
+					int signal = Integer.parseInt(record.get("Signal" + i));
+					network.add(ssid, mac, signal, channel);
+				}
+				double [] loc = searchPi(db, network, k);
+				network.setLat(loc[0]);
+				network.setLon(loc[1]);
+				network.setAlt(loc[2]);
+				userLoc.put(time, network);
+				network = new Networks(id, time, 0,0,0);
+			}
+			ExportCSV.writeCsvFile(userLoc, filename);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	
-	
+
 
 	private static double[] searchPi(String filename, Networks userNetwork , int k) {
 		Networks[] bestNetworks = new Networks[k];
@@ -55,16 +64,14 @@ public class EstimateLoc {
 		int c = 0;
 		boolean isMatch = false;
 		ArrayList<Networks> db = Tempo.macFilterCSV(filename, userNetwork);
+		System.out.println(db.size());
 		for (Networks networks : db) {
-			//System.out.println(networks.toString());
 			for (int i = 0; i < userNetwork.getPoints().size(); i++) {
 				for (int j = 0; j < networks.getPoints().size(); j++) {
 					if(userNetwork.getPoints().get(i).getMAC().equals(networks.getPoints().get(j).getMAC())) {
-						//System.out.println(difference(userNetwork.getPoints().get(i), networks.getPoints().get(j)));
 						weight *= NORM /(
 								Math.pow(difference(userNetwork.getPoints().get(i), networks.getPoints().get(j)),SIG_DIFF) *
 								Math.pow(userNetwork.getPoints().get(i).getSignal(), POWER));
-						
 						isMatch = true;
 					}
 				}
@@ -91,7 +98,7 @@ public class EstimateLoc {
 			}
 			weight = 1;
 		}
-		
+
 		return EstimateAlgo.wcenter(bestNetworks, bestPi);
 
 	}
