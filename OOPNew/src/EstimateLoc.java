@@ -1,7 +1,9 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class UserEstimateLoc {
+public class EstimateLoc {
 
 
 	final static int NORM = 10000, POWER = 2, MIN_DIFF = 3, DIFF_NO_SIG = 100;
@@ -19,10 +21,34 @@ public class UserEstimateLoc {
 		
 	}
 	
+	public static void apEstimateLoc(String db, String wifiscans, String filename, int k) {
+		
+	}
+
+	public static void userEstimateLoc(String db, String wifiscans, String filename, int k) {
+		try {
+		      FileReader fr = new FileReader(wifiscans);
+		      BufferedReader csv_br = new BufferedReader(fr);
+		      String line = "";
+		      while ((line = csv_br.readLine()) != null) {
+		        try {
+		        	
+		        }
+		        catch (Exception e)
+		        {
+		          System.err.println("ERR reading line " + ") Line: " + line);
+		        }
+		      }
+		    }
+		    catch (Exception e) {
+		      e.printStackTrace();
+		    }
+	}
+	
+	
 	
 
-
-	public static void searchPi(String filename, Networks userNetwork , int k) {
+	private static double[] searchPi(String filename, Networks userNetwork , int k) {
 		Networks[] bestNetworks = new Networks[k];
 		double[] bestPi = new double[k];
 		double weight = 1;
@@ -66,15 +92,15 @@ public class UserEstimateLoc {
 			weight = 1;
 		}
 		
-		//System.out.println(Arrays.toString(bestPi));
+		return EstimateAlgo.wcenter(bestNetworks, bestPi);
 
 	}
 
-	public static double difference(Wifi a, Wifi b) {
+	static double difference(Wifi a, Wifi b) {
 		return Math.abs(b.getSignal() - a.getSignal()) ;
 	}
 
-	public static int min(double[] arr) {
+	static int min(double[] arr) {
 		int min = 0;
 		for (int i = 1; i < arr.length; i++) {
 			if(arr[min]>arr[i])

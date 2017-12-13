@@ -31,12 +31,12 @@ public class EstimateAlgo {
 		return wcenter;
 	}
 	
-	public static double[] wcenter(ArrayList<Networks> network, double[] pi){
+	public static double[] wcenter(Networks[] network, double[] pi){
 		double wlat = 0, wlon = 0 ,walt = 0, weight = 0;
-		for (int i = 0; i < network.size(); i++) {
-			wlat += (network.get(i).getLat())* pi[i];
-			wlon += (network.get(i).getLon())* pi[i];
-			walt += (network.get(i).getAlt())* pi[i];
+		for (int i = 0; i < network.length; i++) {
+			wlat += (network[i].getLat())* pi[i];
+			wlon += (network[i].getLon())* pi[i];
+			walt += (network[i].getAlt())* pi[i];
 			weight += pi[i];
 			}
 		double [] wcenter = new double[3];
