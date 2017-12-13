@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * <b>Description:</b> <br>
  * 
  */
-public class APEstimateLoc {
+public class EstimateAlgo {
 	
 	/**
 	 * 
@@ -30,4 +30,20 @@ public class APEstimateLoc {
 		
 		return wcenter;
 	}
+	
+	public static double[] wcenter(ArrayList<Networks> network, double[] pi){
+		double wlat = 0, wlon = 0 ,walt = 0, weight = 0;
+		for (int i = 0; i < network.size(); i++) {
+			wlat += (network.get(i).getLat())* pi[i];
+			wlon += (network.get(i).getLon())* pi[i];
+			walt += (network.get(i).getAlt())* pi[i];
+			weight += pi[i];
+			}
+		double [] wcenter = new double[3];
+		wcenter[0] = wlat/weight;
+		wcenter[1] = wlon/weight;
+		wcenter[2] = walt/weight;
+		
+		return wcenter;
+	}	
 }
