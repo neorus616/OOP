@@ -19,6 +19,7 @@ public class Networks {
 	double _lon = 0;
 	double _alt = 0;
 	ArrayList<Wifi> _points = new ArrayList<Wifi>();
+	int _numAP = 10;
 	
 	//Empty constructor
 	public Networks() {}
@@ -58,14 +59,20 @@ public class Networks {
 	 */
 	public void add(String ssid, String mac, int signal, int channel){
 		Wifi p = new Wifi(ssid, mac, signal, channel);
-		int weak = checkSignal();
-		if(_points.size()==10) {
+		if(_points.size()==_numAP) {
+			int weak = checkSignal();
+			System.out.println(weak);
 			if(_points.get(weak).compareTo(p) == -1) {
 				_points.remove(weak);
 				_points.add(p);
 			}
 		}
 		else _points.add(p);
+	}
+	
+	
+	public void setNumAP(int numAP) {
+		this._numAP = numAP;
 	}
 	
 	/**
@@ -133,7 +140,7 @@ public class Networks {
 	 */
 	public int checkSignal() {
 		int min = 0;
-		for (int i = 1; i < _points.size()-1; i++) 
+		for (int i = 1; i < _points.size(); i++) 
 			if(_points.get(i).compareTo(_points.get(min)) == -1)
 				min = i;
 		return min;

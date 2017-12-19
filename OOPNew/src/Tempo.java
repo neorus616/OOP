@@ -43,9 +43,8 @@ public class Tempo {
 						String mac = record.get("MAC" + i);
 						String ssid = record.get("SSID" + i);
 						int channel = Integer.parseInt(record.get("Frequncy" + i));
-						int signal = Integer.parseInt(record.get("Signal" + i));
-						
-						network.add(ssid, mac, signal, channel);
+						double signal = Double.parseDouble(record.get("Signal" + i));
+						network.add(ssid, mac, (int)signal, channel);
 						for (int j = 0; j < wifiScan.getPoints().size(); j++) {
 							if(mac.equals(wifiScan.getPoints().get(j).getMAC())) {
 								isSample = true;
@@ -66,6 +65,7 @@ public class Tempo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
+			//e.printStackTrace();
 			throw new IllegalArgumentException("Not a valid CSV file !");
 		} catch (StringIndexOutOfBoundsException e) {
 			throw new StringIndexOutOfBoundsException("Wrong filter statement ! \n try like this: \"id/date/location = Lenovo PB2-690Y/2017-10-27 16:13:51/32.16,34.80,46.34\" ");

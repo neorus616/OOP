@@ -2,7 +2,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
@@ -21,7 +23,7 @@ public class ExportCSV {
 	//Delimiter used in CSV file
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	//CSV file header
-	static final Object [] FILE_HEADER = {
+	static final Object [] FILE_HEADER_COMB = {
 			"Time","ID","Lat","Lon", "Alt", "#WIFI Networks",
 			"SSID1", "MAC1", "Frequncy1", "Signal1",
 			"SSID2", "MAC2", "Frequncy2", "Signal2",
@@ -34,13 +36,17 @@ public class ExportCSV {
 			"SSID9", "MAC9", "Frequncy9", "Signal9",
 			"SSID10", "MAC10", "Frequncy10", "Signal10"
 	};
+	
+	static final Object [] FILE_HEADER_WIFI = {
+			"Network", "MAC", "SSID", "Frequency", "Signal", "Lat", "Lon", "Alt", "Time"
+	};
 
 	/**
 	 * 
 	 * @param network - object that contains: id, time, location and #WiFi networks (up to 10 points).
 	 * @param fileName - holds the path and file name where it saves the new CSV file.
 	 */
-	static void writeCsvFile(Hashtable<String, Networks> strongPoints, String fileName) {
+	static void writeCsvFile(Hashtable<String, Networks> strongPoints, String fileName, int state) {
 		FileWriter fileWriter = null;
 		CSVPrinter csvFilePrinter = null;
 		//Create the CSVFormat object with "\n" as a record delimiter
@@ -54,29 +60,48 @@ public class ExportCSV {
 			//initialize CSVPrinter object 
 			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 			//Create CSV file header
-			if(isFirstRun) {
-				csvFilePrinter.printRecord(FILE_HEADER);
+			if(isFirstRun&&state==1) {
+				csvFilePrinter.printRecord(FILE_HEADER_COMB);
 				isFirstRun = false;
 			}
-
-			for (String network : strongPoints.keySet()){
+			if(isFirstRun&&state==2) {
+				csvFilePrinter.printRecord(FILE_HEADER_WIFI);
+			}
+			int counter = 0;
+			List<String> tmp = Collections.list(strongPoints.keys());
+			Collections.sort(tmp);
+			Iterator<String> it = tmp.iterator();
+			while(it.hasNext()){
+			   String network =it.next();
 				List networkDataRecord = new ArrayList();
-				networkDataRecord.add(strongPoints.get(network).getTime());
-				networkDataRecord.add(strongPoints.get(network).getID());
-				networkDataRecord.add(strongPoints.get(network).getLat());
-				networkDataRecord.add(strongPoints.get(network).getLon());
-				networkDataRecord.add(strongPoints.get(network).getAlt());
-				networkDataRecord.add(strongPoints.get(network).getPoints().size());
-				for (Wifi point : (strongPoints.get(network).getPoints())) {
-					networkDataRecord.add(point.getSSID());
-					networkDataRecord.add(point.getMAC());
-					networkDataRecord.add(point.getChannel());
-					networkDataRecord.add(point.getSignal());
+				if(state == 1) {
+					networkDataRecord.add(strongPoints.get(network).getTime());
+					networkDataRecord.add(strongPoints.get(network).getID());
+					networkDataRecord.add(strongPoints.get(network).getLat());
+					networkDataRecord.add(strongPoints.get(network).getLon());
+					networkDataRecord.add(strongPoints.get(network).getAlt());
+					networkDataRecord.add(strongPoints.get(network).getPoints().size());
+					for (Wifi point : (strongPoints.get(network).getPoints())) {
+						networkDataRecord.add(point.getSSID());
+						networkDataRecord.add(point.getMAC());
+						networkDataRecord.add(point.getChannel());
+						networkDataRecord.add(point.getSignal());
+					}
+				}
+				else {
+					networkDataRecord.add(counter++);
+					networkDataRecord.add(strongPoints.get(network).getPoints().get(0).getMAC());
+					networkDataRecord.add(strongPoints.get(network).getPoints().get(0).getSSID());
+					networkDataRecord.add(strongPoints.get(network).getPoints().get(0).getChannel());
+					networkDataRecord.add(strongPoints.get(network).getPoints().get(0).getSignal());
+					networkDataRecord.add(strongPoints.get(network).getLat());
+					networkDataRecord.add(strongPoints.get(network).getLon());
+					networkDataRecord.add(strongPoints.get(network).getAlt());
+					networkDataRecord.add(strongPoints.get(network).getTime());
 				}
 				//Write a new network object list to the CSV file
 				csvFilePrinter.printRecord(networkDataRecord);
 			}
-
 			//System.out.println("CSV file was created successfully !!!");
 		} catch (Exception e) {
 			System.out.println("Error in CsvFileWriter !");

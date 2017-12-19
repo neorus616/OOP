@@ -84,7 +84,7 @@ public class ImportCSV {
 						strongPoints.put(time, network);
 					}
 				}
-				ExportCSV.writeCsvFile(strongPoints, path + "newUpgradedCSV.csv");
+				ExportCSV.writeCsvFile(strongPoints, path + "newUpgradedCSV.csv", 1);
 			}
 			else System.out.println(fileName + " is not a valid CSV format !");
 

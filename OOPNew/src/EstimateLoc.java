@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -15,11 +17,61 @@ public class EstimateLoc {
 
 	public static void main(String[] args){
 
-		userEstimateLoc("C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\_comb_all_.csv","C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\_comb_no_gps_ts2_.csv" ,"C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\Loc.csv", 3);
+		//apEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\MYAlgo1_BM2_4.csv", 4);
+		userEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\_comb_no-GPS_TS2.csv" ,"CSVLoc\\MYAlgo2_BM2_4.csv", 4);
+		
+
+		
 	}
 
-	public static void apEstimateLoc(String db, String wifiscans, String filename, int k) {
-
+	public static void apEstimateLoc(String db, String savePath, int k) {
+		try {
+			Hashtable<String, APNetworks> strongPoints = new Hashtable<>();
+			FileReader in = new FileReader(db);
+			BufferedReader bufferedReader = new BufferedReader(in);
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
+			APNetworks network = new APNetworks();
+			network.setNumAP(k);
+			for (CSVRecord record : records) {
+				String time = record.get("Time");
+				double lat = Double.parseDouble(record.get("Lat"));
+				double lon = Double.parseDouble(record.get("Lon"));
+				double alt = Double.parseDouble(record.get("Alt"));
+				String id = record.get("ID");
+				for (int i = 1; i <= Integer.parseInt(record.get("#WIFI Networks")); i++) {
+					String mac = record.get("MAC" + i);
+					String ssid = record.get("SSID" + i);
+					int channel = Integer.parseInt(record.get("Frequncy" + i));
+					double signal = Double.parseDouble(record.get("Signal" + i));
+					network = new APNetworks(id, time);
+					network.setNumAP(k);
+					network.add(ssid, mac, (int)signal, channel, lat, lon, alt);
+					if(!strongPoints.containsKey(network.getPoints().get(0).getMAC())) {
+						strongPoints.put(network.getPoints().get(0).getMAC(), network);
+					}
+					else strongPoints.get(network.getPoints().get(0).getMAC()).add(ssid, mac, (int)signal, channel, lat, lon, alt);
+				}	
+			}
+			Set<String> keys = strongPoints.keySet();
+			Iterator<String> itr = keys.iterator();
+			String str = "";
+			double [] loc;
+			Hashtable <String, Networks> locAP = new Hashtable<String, Networks>();
+			while (itr.hasNext()) {
+				str = itr.next();
+				loc = EstimateAlgo.wcenter(strongPoints.get(str).getPoints());
+				strongPoints.get(str).setLat(loc[0]);
+				strongPoints.get(str).setLon(loc[1]);
+				strongPoints.get(str).setAlt(loc[2]);
+				Networks locAPs = new Networks(strongPoints.get(str).getID(),strongPoints.get(str).getTime(),loc[0],loc[1],loc[2]);
+				locAPs.add(strongPoints.get(str).getPoints().get(0).getSSID(), str, strongPoints.get(str).getPoints().get(strongPoints.get(str).maxSignal()).getSignal(), strongPoints.get(str).getPoints().get(0).getChannel());
+				locAP.put(str, locAPs);
+			}
+			ExportCSV.writeCsvFile(locAP, savePath, 2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static void userEstimateLoc(String db, String wifiscans, String filename, int k) {
@@ -31,9 +83,6 @@ public class EstimateLoc {
 			Networks network = new Networks();
 			for (CSVRecord record : records) {
 				String time = record.get("Time");
-				//					double lat = Double.parseDouble(record.get("Lat"));
-				//					double lon = Double.parseDouble(record.get("Lon"));
-				//					double alt = Double.parseDouble(record.get("Alt"));
 				String id = record.get("ID");
 				network = new Networks(id, time, 0,0,0);
 				for (int i = 1; i <= Integer.parseInt(record.get("#WIFI Networks")); i++) {
@@ -50,7 +99,7 @@ public class EstimateLoc {
 				userLoc.put(time, network);
 				network = new Networks(id, time, 0,0,0);
 			}
-			ExportCSV.writeCsvFile(userLoc, filename);
+			ExportCSV.writeCsvFile(userLoc, filename, 1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,7 +113,6 @@ public class EstimateLoc {
 		int c = 0;
 		boolean isMatch = false;
 		ArrayList<Networks> db = Tempo.macFilterCSV(filename, userNetwork);
-		System.out.println(db.size());
 		for (Networks networks : db) {
 			for (int i = 0; i < userNetwork.getPoints().size(); i++) {
 				for (int j = 0; j < networks.getPoints().size(); j++) {
@@ -73,6 +121,9 @@ public class EstimateLoc {
 								Math.pow(difference(userNetwork.getPoints().get(i), networks.getPoints().get(j)),SIG_DIFF) *
 								Math.pow(userNetwork.getPoints().get(i).getSignal(), POWER));
 						isMatch = true;
+						if(weight > 2) {
+							System.out.println(userNetwork.getPoints().get(i).getMAC());
+						}
 					}
 				}
 				if(!isMatch) {
@@ -81,9 +132,9 @@ public class EstimateLoc {
 							Math.pow(userNetwork.getPoints().get(i).getSignal(), POWER));
 				}
 				isMatch = false;
+
 			}
 			if(c < k) {
-				System.out.println(weight);
 				bestPi[c] = weight;
 				bestNetworks[c] = networks;
 				c++;
@@ -99,12 +150,12 @@ public class EstimateLoc {
 			weight = 1;
 		}
 
-		return EstimateAlgo.wcenter(bestNetworks, bestPi);
+		return EstimateAlgo.wcenter(bestNetworks, bestPi, c);
 
 	}
 
 	static double difference(Wifi a, Wifi b) {
-		return Math.abs(b.getSignal() - a.getSignal()) ;
+		return Math.abs(b.getSignal() - a.getSignal()) + MIN_DIFF ;
 	}
 
 	static int min(double[] arr) {
