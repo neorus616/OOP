@@ -27,5 +27,5 @@ The KML file is located in the source folder where the Combined CSV file, you ca
 - [X] Upload CSV and KML samples
 - [X] Write README.md
 - [X] Add algorithms for Assigment 2 
-- [ ] Write function to execute the algorithms
+- [X] Write function to execute the algorithms
 - [ ] Rewrite the CSV reader to read for many purposes
