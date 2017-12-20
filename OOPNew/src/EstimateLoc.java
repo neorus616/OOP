@@ -15,15 +15,6 @@ public class EstimateLoc {
 	final static int NORM = 10000, POWER = 2, MIN_DIFF = 3, DIFF_NO_SIG = 100;
 	final static double  SIG_DIFF = 0.4;
 
-	public static void main(String[] args){
-
-		//apEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\MYAlgo1_BM2_4.csv", 4);
-		userEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\_comb_no-GPS_TS2.csv" ,"CSVLoc\\MYAlgo2_BM2_4.csv", 4);
-		
-
-		
-	}
-
 	public static void apEstimateLoc(String db, String savePath, int k) {
 		try {
 			Hashtable<String, APNetworks> strongPoints = new Hashtable<>();
