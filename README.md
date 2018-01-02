@@ -33,3 +33,5 @@ To use the second alghoritm to find approx location of user, use the function Es
 - [X] Add algorithms for Assigment 2 
 - [X] Write function to execute the algorithms
 - [ ] Rewrite the CSV reader to read for many purposes
+- [ ] Change filter to interface implements
+- [ ] Add GUI
