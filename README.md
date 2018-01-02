@@ -35,3 +35,4 @@ To use the second alghoritm to find approx location of user, use the function Es
 - [ ] Rewrite the CSV reader to read for many purposes
 - [ ] Change filter to interface implements
 - [ ] Add GUI
+- [ ] Add UML
