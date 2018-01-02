@@ -201,5 +201,12 @@ public class Networks {
 			return isTime(filter);
 		return false;
 	}
+	
+	public boolean filter(Filter f){
+			boolean ans = f.test(this);
+			if(!ans)
+				return false;
+			else return true;
+	}
 
 }
