@@ -145,11 +145,11 @@ public class EstimateLoc {
 
 	}
 
-	static double difference(Wifi a, Wifi b) {
+	private static double difference(Wifi a, Wifi b) {
 		return Math.abs(b.getSignal() - a.getSignal()) + MIN_DIFF ;
 	}
 
-	static int min(double[] arr) {
+	private static int min(double[] arr) {
 		int min = 0;
 		for (int i = 1; i < arr.length; i++) {
 			if(arr[min]>arr[i])

@@ -13,13 +13,13 @@ import java.util.function.Predicate;
 
 public class Networks {
 
-	String _id = "";
-	String _time = "";
-	double _lat = 0;
-	double _lon = 0;
-	double _alt = 0;
-	ArrayList<Wifi> _points = new ArrayList<Wifi>();
-	int _numAP = 10;
+	private String _id = "";
+	private String _time = "";
+	private double _lat = 0;
+	private double _lon = 0;
+	private double _alt = 0;
+	private ArrayList<Wifi> _points = new ArrayList<Wifi>();
+	private int _numAP = 10;
 
 	//Empty constructor
 	public Networks() {}
