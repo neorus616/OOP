@@ -22,7 +22,7 @@ class ExportKML {
 	 * @param strongPoints - a filtered hashmap.
 	 * @param fileName -path and file name where it saves the new KML file.
 	 */
-	static void writeKMLFile(Map<String, Networks> strongPoints, String fileName) {
+	public static void writeKMLFile(Map<String, Networks> strongPoints, String fileName) {
 		final Kml kml = new Kml();
 		Document document = kml.createAndSetDocument();
 		
