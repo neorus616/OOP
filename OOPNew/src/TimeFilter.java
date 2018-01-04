@@ -4,12 +4,23 @@ import java.time.format.DateTimeFormatter;
 
 public class TimeFilter implements Filter {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String _start, _end;
 
 	public TimeFilter(String start, String end) {
 		_start = start;
 		_end = end;
 	}
+	
+	public TimeFilter(String [] time) {
+		_start = time[0];
+		_end = time[1];
+	}
+	
+	
 
 	@Override
 	public boolean test(Networks p) {

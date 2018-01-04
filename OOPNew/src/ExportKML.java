@@ -43,7 +43,6 @@ class ExportKML {
 		try {
 			kml.marshal(new File(fileName));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.out.println("File Not Found !");
 		}
 	}

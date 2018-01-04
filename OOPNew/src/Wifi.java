@@ -65,12 +65,6 @@ public class Wifi implements Comparable<Wifi>{
 		return _channel;
 	}
 
-	
-	/**
-	 * @return 0 if the object's signal is equal to this object's signal;
-	 * 1 if object's signal is weaker than the object's signal;
-	 * -1 if this object's signal is stronger than object's signal.
-	 */
 	@Override
 	public int compareTo(Wifi w) {
 		// TODO Auto-generated method stub
@@ -80,5 +74,13 @@ public class Wifi implements Comparable<Wifi>{
 			return 1;
 		return 0;
 	}
+
+	
+	/**
+	 * @return 0 if the object's signal is equal to this object's signal;
+	 * 1 if object's signal is weaker than the object's signal;
+	 * -1 if this object's signal is stronger than object's signal.
+	 */
+
 	
 }

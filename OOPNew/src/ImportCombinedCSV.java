@@ -22,14 +22,12 @@ public class ImportCombinedCSV {
 	 * @param path -  File path.
 	 * @param filter - Attribute to filter with.
 	 */
-	public static void filterCSV(String path, String filter) {
+	public static Map<String, Networks> filterCSV(String path, String filter) {
+		Map<String, Networks> strongPoints = new HashMap<>();
 		try {
-			Map<String, Networks> strongPoints = new HashMap<>();
-			String newPath = newPath(path);
-			int k = filter.lastIndexOf('=');
-			String filterBy = filter.substring(0,k).trim(); //id or location or time
-			filter = filter.substring(k+1).trim(); //which id or location or time
-			if(validCSV(path, filterBy)) {
+//			String newPath = newPath(path);
+			Filter filter1 = filter(filter);
+			if(validCSV(path)) {
 				FileReader in = new FileReader(path);
 				BufferedReader bufferedReader = new BufferedReader(in);
 				Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
@@ -47,7 +45,7 @@ public class ImportCombinedCSV {
 						int signal = Integer.parseInt(record.get("Signal" + i));
 						network = new Networks(id, time, lat, lon, alt);
 						network.add(ssid, mac, signal, channel);
-						if(network.filter(filterBy, filter)) {
+						if(filter1.test(network)) {
 							if(!strongPoints.containsKey(network.getPoints().get(0).getMAC())) {
 								strongPoints.put(network.getPoints().get(0).getMAC(), network);
 							}
@@ -58,18 +56,17 @@ public class ImportCombinedCSV {
 						}
 					}
 				}
-				ExportKML.writeKMLFile(strongPoints, newPath + "newUpgradedKML.kml");
 			}
 			else throw new IllegalArgumentException("Not a valid CSV file !");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException("Not a valid CSV file !");
 		} catch (StringIndexOutOfBoundsException e) {
 			throw new StringIndexOutOfBoundsException("Wrong filter statement ! \n try like this: \"id/date/location = Lenovo PB2-690Y/2017-10-27 16:13:51/32.16,34.80,46.34\" ");
 		}
+		return strongPoints;
 	}
 
 	/**
@@ -79,35 +76,41 @@ public class ImportCombinedCSV {
 	 * @param filter - Attribute to filter with.
 	 * @return CSV file or filter type is valid or not.
 	 */
-	private static boolean validCSV(String path, String filter) {
-		boolean validFilter = true;
+	private static boolean validCSV(String path) {
 		boolean validCSV = false;
 		String extension = "";
 		File f = new File(path);
 		if(f.isFile())
 			validCSV = true;
-		if(validCSV && (filter.contains("id") || filter.contains("date") || filter.contains("location")))
-			validCSV = true;
-		else if(validCSV)
-			validFilter = false;
 		int k = path.lastIndexOf('.');
 		if (k > 0)
 			extension = path.substring(k+1);
 		if(extension.compareTo("csv") != 0)
 			validCSV = false;
-		return validCSV&&validFilter;
+		return validCSV;
+	}
+	
+	private static Filter filter(String filter) {
+		int k = filter.lastIndexOf('=');
+		if(filter.contains("id")) //id = lenovo
+			return new IDFilter(filter.substring(k+1).trim());
+		if(filter.contains("location")) //location = 100,200,150,200,30,60
+			return new LocationFilter(filter.substring(k+1).trim().split(","));
+		if(filter.contains("date")) //date = 2017-10-27 16:27:03,2017-10-27 16:37:03
+			return new TimeFilter(filter.substring(k+1).trim().split(","));
+		return null;
 	}
 
-	/**
-	 * 
-	 * Gets the directory where the combined CSV is located(to save later the KML file).
-	 * @param path - hold file path.
-	 * @return newPath - directory path. 
-	 */
-	private static String newPath(String path) {
-		int k = path.lastIndexOf("/");
-		int j = path.lastIndexOf("\\");
-		String newPath = k<j ? path.substring(0,j+1) : path.substring(0,k+1);
-		return newPath;
-	}
+//	/**
+//	 * 
+//	 * Gets the directory where the combined CSV is located(to save later the KML file).
+//	 * @param path - hold file path.
+//	 * @return newPath - directory path. 
+//	 */
+//	private static String newPath(String path) {
+//		int k = path.lastIndexOf("/");
+//		int j = path.lastIndexOf("\\");
+//		String newPath = k<j ? path.substring(0,j+1) : path.substring(0,k+1);
+//		return newPath;
+//	}
 }

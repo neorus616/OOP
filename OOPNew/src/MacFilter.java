@@ -16,14 +16,14 @@ import org.apache.commons.csv.CSVRecord;
  * <b>Description:</b> <br>
  * Temporary.
  */
-public class Tempo {
+public class MacFilter {
 
 	/**
 	 * 
 	 * @param path -  File path.
 	 * @param wifiScan - User current APs scan.
 	 */
-	public static ArrayList<Networks> macFilterCSV(String path, Networks wifiScan) {
+	public static ArrayList<Networks> test(String path, Networks wifiScan) {
 		ArrayList<Networks> APs = new ArrayList<Networks>();
 		try {
 			if(validCSV(path)) {

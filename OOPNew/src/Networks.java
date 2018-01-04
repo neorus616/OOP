@@ -20,10 +20,10 @@ public class Networks {
 	double _alt = 0;
 	ArrayList<Wifi> _points = new ArrayList<Wifi>();
 	int _numAP = 10;
-	
+
 	//Empty constructor
 	public Networks() {}
-	
+
 	/**
 	 * 
 	 * @param id - Phone.
@@ -49,7 +49,7 @@ public class Networks {
 		return "ID=" + _id + ", Time=" + _time + ", Latitude=" + _lat + ", Longitude=" + _lon + ", Altitude=" + _alt
 				+ ", #WiFi networks =" + _points.size()+ ": " + _points.toString();
 	}
-	
+
 	/**
 	 * 
 	 * @param ssid - AP Name.
@@ -61,7 +61,6 @@ public class Networks {
 		Wifi p = new Wifi(ssid, mac, signal, channel);
 		if(_points.size()==_numAP) {
 			int weak = checkSignal();
-			System.out.println(weak);
 			if(_points.get(weak).compareTo(p) == -1) {
 				_points.remove(weak);
 				_points.add(p);
@@ -69,12 +68,12 @@ public class Networks {
 		}
 		else _points.add(p);
 	}
-	
-	
+
+
 	public void setNumAP(int numAP) {
 		this._numAP = numAP;
 	}
-	
+
 	/**
 	 * 
 	 * @return Object's ID.
@@ -82,7 +81,7 @@ public class Networks {
 	public String getID() {
 		return _id;
 	}
-	
+
 	/**
 	 * 
 	 * @return Object's Time.
@@ -90,7 +89,7 @@ public class Networks {
 	public String getTime() {
 		return _time;
 	}
-	
+
 	/**
 	 * 
 	 * @return Object's Latitude.
@@ -98,7 +97,7 @@ public class Networks {
 	public double getLat() {
 		return _lat;
 	}
-	
+
 	public void setLat(double lat) {
 		this._lat = lat;
 	}
@@ -109,11 +108,11 @@ public class Networks {
 	public double getLon() {
 		return _lon;
 	}
-	
+
 	public void setLon(double lon) {
 		this._lon = lon;
 	}
-	
+
 	/**
 	 * 
 	 * @return Object's Altitude.
@@ -121,11 +120,11 @@ public class Networks {
 	public double getAlt() {
 		return _alt;
 	}
-	
+
 	public void setAlt(double alt) {
 		this._alt = alt;
 	}
-	
+
 	/**
 	 * 
 	 * @return Object's Access points.
@@ -133,7 +132,7 @@ public class Networks {
 	public ArrayList<Wifi> getPoints() {
 		return _points;
 	}
-	
+
 	/**
 	 * 
 	 * @return Index of weakest AP in Object.
@@ -145,14 +144,14 @@ public class Networks {
 				min = i;
 		return min;
 	}
-	
+
 	/**
 	 * 
 	 * @param id - Phone filter.
 	 * @return True if object's ID equals filter's ID, false otherwise.
 	 */
 	public boolean isId(String id) {
-	    return this.getID().equalsIgnoreCase(id);
+		return this.getID().equalsIgnoreCase(id);
 	}
 
 	/**
@@ -163,9 +162,9 @@ public class Networks {
 	public boolean isLocation(String location) {
 		String splitBy = ",";
 		String[] gps = location.split(splitBy);
-	    return (Haversine.distance(this.getLat(), this.getLon(), Double.parseDouble(gps[0]), Double.parseDouble(gps[1])) <= Double.parseDouble(gps[2]));
+		return (Haversine.distance(this.getLat(), this.getLon(), Double.parseDouble(gps[0]), Double.parseDouble(gps[1])) <= Double.parseDouble(gps[2]));
 	}
-	
+
 	/**
 	 * 
 	 * @param time - Time filter.
@@ -179,13 +178,13 @@ public class Networks {
 		LocalDateTime dateTime1= LocalDateTime.parse(date[0], formatter);
 		LocalDateTime dateTime2= LocalDateTime.parse(date[1], formatter);
 		LocalDateTime dateTime3= LocalDateTime.parse(this.getTime(), formatter);
-		
+
 		long diffInMilli = java.time.Duration.between(dateTime1, dateTime2).getSeconds();
 		long diffInMilli1 = java.time.Duration.between(dateTime3, dateTime2).getSeconds();
-		
-	    return (diffInMilli > diffInMilli1 && diffInMilli1 > 0);
+
+		return (diffInMilli > diffInMilli1 && diffInMilli1 > 0);
 	}
-	
+
 	/**
 	 * 
 	 * @param filterBy - Filter type.
@@ -201,12 +200,9 @@ public class Networks {
 			return isTime(filter);
 		return false;
 	}
-	
+
 	public boolean filter(Filter f){
-			boolean ans = f.test(this);
-			if(!ans)
-				return false;
-			else return true;
+		return f.test(this);
 	}
 
 }

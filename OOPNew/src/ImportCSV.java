@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -20,12 +17,13 @@ import org.apache.commons.csv.CSVRecord;
  * then, send it to ExportCSV class for further processing.
  */
 public class ImportCSV {
-
+	
 	/**
 	 * @param path - User input for the CSV directory.
 	 * @exception IllegalArgumentException - No CSV files or not a directory.
 	 */
-	public static void validPath(String path) {
+	public static Hashtable<String, Networks> validPath(String path) {
+		Hashtable<String, Networks> strongPoints =  new Hashtable<>();
 		int counter = 0;
 		File f = new File(path);
 		if(f.isDirectory()) {
@@ -37,7 +35,7 @@ public class ImportCSV {
 				if (k > 0)
 					extension = fileName.substring(k+1);
 				if(extension.compareTo("csv") == 0) {
-					ImportCSV.readCSV(path, fileName);
+					strongPoints = (mergeHash(strongPoints,readCSV(path, fileName)));
 					counter++;
 				}
 			}
@@ -48,7 +46,7 @@ public class ImportCSV {
 		else {
 			throw new IllegalArgumentException(path + " is Not a Directory");
 		}
-
+		return strongPoints;
 	}
 
 	/**
@@ -56,13 +54,12 @@ public class ImportCSV {
 	 * @param fileName - File name.
 	 * @exception IllegalArgumentException - The file corrupted or in wrong format.
 	 */
-	static void readCSV(String path, String fileName) {
+	public static Hashtable<String, Networks> readCSV(String path, String fileName) {
+		Hashtable<String, Networks> strongPoints =  new Hashtable<>();
 		try {
 			FileReader in = new FileReader(path + fileName);
 			BufferedReader bufferedReader = new BufferedReader(in);
-			String csvSplitBy = ",";
-			String[] catchModel = bufferedReader.readLine().split(csvSplitBy);	
-			Hashtable<String, Networks> strongPoints =  new Hashtable<>();
+			String[] catchModel = bufferedReader.readLine().split(",");	
 			if(catchModel.length > 2 && catchModel[2].contains("model")) {
 				String model = catchModel[2].substring(6, catchModel[2].length());
 				Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(bufferedReader);
@@ -76,21 +73,31 @@ public class ImportCSV {
 					double lat = Double.parseDouble(record.get("CurrentLatitude"));
 					double lon = Double.parseDouble(record.get("CurrentLongitude"));
 					double alt = Double.parseDouble(record.get("AltitudeMeters"));
-					if(strongPoints.containsKey(time))
-						strongPoints.get(time).add(ssid, mac, signal, channel);
+					if(strongPoints.containsKey(time+model))
+						strongPoints.get(time+model).add(ssid, mac, signal, channel);
 					else {
 						network = new Networks(model, time, lat, lon, alt);
 						network.add(ssid, mac, signal, channel);
-						strongPoints.put(time, network);
+						strongPoints.put(time+model, network);
 					}
 				}
-				ExportCSV.writeCsvFile(strongPoints, path + "newUpgradedCSV.csv", 1);
 			}
-			else System.out.println(fileName + " is not a valid CSV format !");
+			else System.out.println(fileName + " is not a valid WiGLe CSV format !");
 
+			bufferedReader.close();
 		} catch (IOException | IllegalArgumentException e) {
 			throw new IllegalArgumentException(fileName + " is not a valid CSV file !");
 
 		}
+		
+		return strongPoints;
+	}
+	
+	public static Hashtable<String, Networks> mergeHash(Hashtable<String, Networks> to, Hashtable<String, Networks> from) {
+		for (String time : from.keySet()) {
+			if(!to.containsKey(time))
+				to.put(time, from.get(time)); 
+		}
+		return to;
 	}
 }

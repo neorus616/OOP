@@ -103,7 +103,7 @@ public class EstimateLoc {
 		double weight = 1;
 		int c = 0;
 		boolean isMatch = false;
-		ArrayList<Networks> db = Tempo.macFilterCSV(filename, userNetwork);
+		ArrayList<Networks> db = MacFilter.test(filename, userNetwork);
 		for (Networks networks : db) {
 			for (int i = 0; i < userNetwork.getPoints().size(); i++) {
 				for (int j = 0; j < networks.getPoints().size(); j++) {

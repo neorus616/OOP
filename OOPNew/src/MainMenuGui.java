@@ -9,6 +9,9 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
@@ -19,6 +22,7 @@ import javax.swing.JRadioButton;
 
 public class MainMenuGui {
 
+	Hashtable<String, Networks> strongPoints =  new Hashtable<>();
 	boolean location = false;
 	boolean time = false;
 	boolean id = false;
@@ -79,7 +83,7 @@ public class MainMenuGui {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frame.setBounds(100, 100, 715, 627);
+		frame.setBounds(100, 100, 710, 615);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JTextPane txtpnStartTime = new JTextPane();
@@ -91,16 +95,28 @@ public class MainMenuGui {
 		txtpnEndTime.setVisible(time);
 
 		JTextPane txtpnLat = new JTextPane();
-		txtpnLat.setText("Lat");
+		txtpnLat.setText("MinLat");
 		txtpnLat.setVisible(location);
-
+	
 		JTextPane txtpnLon = new JTextPane();
-		txtpnLon.setText("Lon");
+		txtpnLon.setText("MinLon");
 		txtpnLon.setVisible(location);
 
 		JTextPane txtpnAlt = new JTextPane();
-		txtpnAlt.setText("Alt");
+		txtpnAlt.setText("MinAlt");
 		txtpnAlt.setVisible(location);
+		
+		JTextPane txtpnMaxlat = new JTextPane();
+		txtpnMaxlat.setText("MaxLat");
+		txtpnMaxlat.setVisible(location);
+		
+		JTextPane txtpnMaxalt = new JTextPane();
+		txtpnMaxalt.setText("MaxAlt");
+		txtpnMaxalt.setVisible(location);
+		
+		JTextPane txtpnMaxlon = new JTextPane();
+		txtpnMaxlon.setText("MaxLon");
+		txtpnMaxlon.setVisible(location);
 
 		JTextPane txtpnIdFilter = new JTextPane();
 		txtpnIdFilter.setText("ID name");
@@ -114,6 +130,16 @@ public class MainMenuGui {
 					notFilter1 = true;
 				else notFilter2 = false;
 				filters();
+				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
+				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				
 			}
 		});
 		chckbxNot1Filter.setBackground(Color.LIGHT_GRAY);
@@ -125,6 +151,16 @@ public class MainMenuGui {
 					notFilter2 = true;
 				else notFilter2 = false;
 				filters();
+				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
+				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				
 			}
 		});
 		chckbxNot2Filter.setBackground(Color.LIGHT_GRAY);
@@ -136,11 +172,9 @@ public class MainMenuGui {
 				chooser = new JFileChooser(); 
 				chooser.setCurrentDirectory(new java.io.File("."));
 				chooser.setDialogTitle(null);
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("csv", "csv");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("csv file", "csv");
 				chooser.setFileFilter(filter);
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					System.out.println("getCurrentDirectory(): " 
-							+  chooser.getCurrentDirectory());
 					System.out.println("getSelectedFile() : " 
 							+  chooser.getSelectedFile());
 				}
@@ -160,10 +194,11 @@ public class MainMenuGui {
 				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				chooser.setAcceptAllFileFilterUsed(false);
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					System.out.println("getCurrentDirectory(): " 
-							+  chooser.getCurrentDirectory());
+					//strongPoints = ImportCSV.validPath(chooser.getSelectedFile().getAbsolutePath()+"\\");
+					watcher p = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",strongPoints);
+					p.start();
 					System.out.println("getSelectedFile() : " 
-							+  chooser.getSelectedFile());
+							+  chooser.getSelectedFile().getAbsolutePath());
 				}
 				else {
 					System.out.println("No Selection ");
@@ -174,12 +209,21 @@ public class MainMenuGui {
 		JButton btnClearAll = new JButton("Clear all");
 		btnClearAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				strongPoints.clear();
 			}
 		});
 
 		JButton btnSaveCombinedCsv = new JButton("Save Combined CSV File");
 		btnSaveCombinedCsv.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setCurrentDirectory(new java.io.File("."));
+				int retrival = chooser.showSaveDialog(null);
+			    if (retrival == JFileChooser.APPROVE_OPTION) {
+			    	System.out.println("Saving " + strongPoints.size() + " Points..");
+			    	
+			    	ExportCSV.writeCsvFile(strongPoints, chooser.getSelectedFile()+".csv",1);
+			    }
 
 			}
 		});
@@ -196,6 +240,16 @@ public class MainMenuGui {
 			public void actionPerformed(ActionEvent e) {
 				filter1 = (String) comboBoxFilter1.getSelectedItem();
 				filters();
+				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
+				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				
 			}
 		});
 		comboBoxFilter1.setModel(new DefaultComboBoxModel(new String[] {"", "Time", "Location", "ID"}));
@@ -207,6 +261,16 @@ public class MainMenuGui {
 			public void actionPerformed(ActionEvent e) {
 				filter2 = (String)comboBoxFilter2.getSelectedItem();
 				filters();
+				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
+				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				
 			}
 		});
 		comboBoxFilter2.setModel(new DefaultComboBoxModel(new String[] {"", "Time", "Location", "ID"}));
@@ -236,91 +300,104 @@ public class MainMenuGui {
 		});
 		rdbtnOr.setBackground(Color.LIGHT_GRAY);
 		rdbtnAnd.setBackground(Color.LIGHT_GRAY);
+		
+		JButton btnLoadFilter = new JButton("Load Filter");
+		
 
 
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
-				groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGap(27)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnLoadFile)
-								.addComponent(btnSaveCombinedCsv)
-								.addGroup(groupLayout.createSequentialGroup()
-										.addGap(9)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addGroup(groupLayout.createSequentialGroup()
-														.addComponent(chckbxNot1Filter)
-														.addGap(18)
-														.addComponent(comboBoxFilter1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-												.addComponent(txtpnStartTime, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtpnEndTime, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE))
-										.addGap(20)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addGroup(groupLayout.createSequentialGroup()
-														.addComponent(rdbtnOr)
-														.addGap(56)
-														.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-																.addComponent(txtpnLat, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-																.addComponent(txtpnLon, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-																.addComponent(txtpnAlt, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
-												.addGroup(groupLayout.createSequentialGroup()
-														.addComponent(rdbtnAnd)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(chckbxNot2Filter)
-														.addGap(18)
-														.addComponent(comboBoxFilter2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))))
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addGroup(groupLayout.createSequentialGroup()
-														.addGap(151)
-														.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-																.addComponent(btnSaveKmlFile)
-																.addComponent(btnLoadFolder)))
-												.addGroup(groupLayout.createSequentialGroup()
-														.addGap(18)
-														.addComponent(txtpnIdFilter, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE))))
-								.addComponent(btnClearAll))
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				);
+					.addGap(15)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(txtpnEndTime, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtpnMaxlat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(txtpnMaxalt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtpnMaxlon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(txtpnStartTime, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtpnLat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(txtpnAlt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(txtpnLon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(txtpnIdFilter, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+								.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+									.addGap(20)
+									.addComponent(chckbxNot1Filter, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(comboBoxFilter1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(rdbtnAnd)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(rdbtnOr)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(chckbxNot2Filter)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(comboBoxFilter2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(btnLoadFilter, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))))
+								.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+									.addComponent(btnLoadFile)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnSaveCombinedCsv)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnLoadFolder)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnClearAll)
+								.addComponent(btnSaveKmlFile))))
+					.addContainerGap(294, Short.MAX_VALUE))
+		);
 		groupLayout.setVerticalGroup(
-				groupLayout.createParallelGroup(Alignment.TRAILING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnLoadFile)
-								.addComponent(btnLoadFolder))
-						.addGap(26)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnSaveCombinedCsv)
-								.addComponent(btnSaveKmlFile))
-						.addGap(18)
-						.addComponent(btnClearAll)
-						.addGap(22)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(chckbxNot1Filter, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnLoadFile)
+						.addComponent(btnSaveCombinedCsv)
+						.addComponent(btnLoadFolder)
+						.addComponent(btnSaveKmlFile))
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(comboBoxFilter1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(rdbtnOr)
 								.addComponent(chckbxNot2Filter)
+								.addComponent(chckbxNot1Filter, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
 								.addComponent(comboBoxFilter2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(rdbtnAnd))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnClearAll)
+								.addComponent(btnLoadFilter))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 								.addGroup(groupLayout.createSequentialGroup()
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(txtpnStartTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtpnLat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtpnIdFilter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addGap(18)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(txtpnEndTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtpnLon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(txtpnAlt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addComponent(rdbtnOr))
-						.addGap(225))
-				);
+									.addComponent(rdbtnAnd)
+									.addGap(18)
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+										.addComponent(txtpnStartTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtpnLat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(txtpnAlt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtpnLon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(txtpnIdFilter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(txtpnEndTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtpnMaxalt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtpnMaxlat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtpnMaxlon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(502))
+		);
 		frame.getContentPane().setLayout(groupLayout);
 		frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{chckbxNot1Filter, btnClearAll, btnSaveCombinedCsv, btnSaveKmlFile, btnLoadFile, btnLoadFolder, chckbxNot2Filter}));
 	}

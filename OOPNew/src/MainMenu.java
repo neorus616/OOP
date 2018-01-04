@@ -1,3 +1,6 @@
+import java.io.File;
+import java.util.Hashtable;
+
 /**
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>
  * @version 2.0
@@ -11,14 +14,22 @@ public class MainMenu {
 	public static void main(String[] args){
 		// TODO Auto-generated method stub
 		
-		//ImportCSV.validPath("CSVLoc/testing/Wifi_scans/");
-		//ImportCombinedCSV.filterCSV("C:\\Users\\Adminchuwi\\Documents\\OOP\\CSVLoc\\Algo2_test_BM1_4_3.csv", "date = 2017-10-27 16:27:03,2017-10-27 16:37:03");
+		readAndWriteComb("DBwifiscans/","DBwifiscans/VeryUpgradedCSV.csv");
+		//readAndWriteKML("CSV/VeryUpgradedCSV.csv", "date = 2017-10-27 16:27:03,2017-10-27 16:37:03", "CSV/VeryUpgradedKML.kml");
 	
 		//EstimateLoc.apEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\MYAlgo1_BM2_4.csv", 4);
 		//EstimateLoc.userEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\_comb_no-GPS_TS2.csv" ,"CSVLoc\\MYAlgo2_BM2_4.csv", 4);
-				
-
+		
+		
+	}
 	
+	public static void readAndWriteComb(String path, String savePath) {
+		Hashtable<String, Networks> strongPoints =  ImportCSV.validPath(path);
+		//ExportCSV.writeCsvFile(ImportCSV.validPath(path),savePath,1);
+	}
+	
+	public static void readAndWriteKML(String path, String filter, String savePath) {
+		ExportKML.writeKMLFile(ImportCombinedCSV.filterCSV(path, filter), savePath);
 	}
 
 }

@@ -56,7 +56,7 @@ public class ExportCSV {
 		 isFirstRun = true;
 		try {
 			//initialize FileWriter object	
-			fileWriter = new FileWriter(fileName, true);
+			fileWriter = new FileWriter(fileName);
 			//initialize CSVPrinter object 
 			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 			//Create CSV file header
