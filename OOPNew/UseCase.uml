@@ -456,6 +456,8 @@
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_FoDtoPEtEee0tfnb_jSRvw" name="T" type="_D0r6wO_pEeeTr-l7bcO5Mw"/>
     </ownedOperation>
   </packagedElement>
+  <packagedElement xmi:type="uml:InformationItem" xmi:id="_ost3UPE6EeesYrboobhK1Q" name="InformationItem1"/>
+  <packagedElement xmi:type="uml:InformationItem" xmi:id="_o6bjMPE6EeesYrboobhK1Q" name="InformationItem2"/>
   <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_LoTsQO_iEeeTr-l7bcO5Mw">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_LoVhcO_iEeeTr-l7bcO5Mw" source="http://www.eclipse.org/uml2/2.0.0/UML">
       <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/PapyrusJava/1#/"/>
