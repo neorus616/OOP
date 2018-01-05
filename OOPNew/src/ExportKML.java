@@ -23,11 +23,9 @@ class ExportKML {
 	 * @param strongPoints - a filtered hashmap.
 	 * @param fileName -path and file name where it saves the new KML file.
 	 */
-<<<<<<< HEAD
+
 	static void writeKMLFile(Hashtable<String, Networks> strongPoints, String fileName, int state) {
-=======
-	public static void writeKMLFile(Map<String, Networks> strongPoints, String fileName) {
->>>>>>> branch 'master' of https://github.com/neorus616/OOP.git
+
 		final Kml kml = new Kml();
 		Document document = kml.createAndSetDocument();
 
