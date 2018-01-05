@@ -7,6 +7,7 @@ public interface Filter extends Serializable {
 	 * @param rec
 	 * @return true if the record pass the filter otherwise returns false 
 	 */
-	
+
 	public boolean test(Networks p);
+	
 }

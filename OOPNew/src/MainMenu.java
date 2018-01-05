@@ -14,7 +14,7 @@ public class MainMenu {
 	public static void main(String[] args){
 		// TODO Auto-generated method stub
 		
-		readAndWriteComb("DBwifiscans/","DBwifiscans/VeryUpgradedCSV.csv");
+		//readAndWriteComb("DBwifiscans/","DBwifiscans/VeryUpgradedCSV.csv");
 		//readAndWriteKML("CSV/VeryUpgradedCSV.csv", "date = 2017-10-27 16:27:03,2017-10-27 16:37:03", "CSV/VeryUpgradedKML.kml");
 	
 		//EstimateLoc.apEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\MYAlgo1_BM2_4.csv", 4);
@@ -25,11 +25,11 @@ public class MainMenu {
 	
 	public static void readAndWriteComb(String path, String savePath) {
 		Hashtable<String, Networks> strongPoints =  ImportCSV.validPath(path);
-		//ExportCSV.writeCsvFile(ImportCSV.validPath(path),savePath,1);
+		ExportCSV.writeCsvFile(ImportCSV.validPath(path),savePath,1);
 	}
 	
 	public static void readAndWriteKML(String path, String filter, String savePath) {
-		ExportKML.writeKMLFile(ImportCombinedCSV.filterCSV(path, filter), savePath);
+		ExportKML.writeKMLFile(ImportCombinedCSV.filterCSV(path, filter), savePath, 1);
 	}
 
 }

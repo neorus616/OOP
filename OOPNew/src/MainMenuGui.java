@@ -19,19 +19,26 @@ import javax.swing.JTextPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.JFormattedTextField;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextArea;
 
 public class MainMenuGui {
 
-	Hashtable<String, Networks> strongPoints =  new Hashtable<>();
+	Hashtable<String, Networks> strongPoints;
+	watcher p;
 	boolean location = false;
-	boolean time = false;
+	boolean Date = false;
 	boolean id = false;
-	boolean and = false;
+	boolean and = true;
 	boolean or = false;
 	String filter1 = "";
 	String filter2 = "";
 	boolean notFilter1 = false;
 	boolean notFilter2 = false;
+	Filter filter11;
+	Filter filter22;
 
 	private JFrame frame;
 
@@ -58,65 +65,48 @@ public class MainMenuGui {
 		initialize();
 	}
 
-	public void filters() {
-		if(and)
-			if(notFilter1&&notFilter2)
-				System.out.println("Filters (Not " + filter1 + ") and (Not " + filter2 + ")");
-			else if(notFilter1)
-				System.out.println("Filters (Not " + filter1 + ") and " + filter2);
-			else if(notFilter2)
-				System.out.println("Filters " + filter1 + " and (Not " + filter2 + ")");
-			else System.out.println("Filters " + filter1 + " and " + filter2);
-		else if(or)
-			if(notFilter1&&notFilter2)
-				System.out.println("Filters (Not " + filter1 + ") or (Not " + filter2 + ")");
-			else if(notFilter1)
-				System.out.println("Filters (Not " + filter1 + ") or " + filter2);
-			else if(notFilter2)
-				System.out.println("Filters " + filter1 + " or (Not " + filter2 + ")");
-			else System.out.println("Filters " + filter1 + " or " + filter2);
-	}
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		strongPoints = new Hashtable<>();
+		history a = new history(strongPoints);
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frame.setBounds(100, 100, 710, 615);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JTextPane txtpnStartTime = new JTextPane();
-		txtpnStartTime.setText("Start time");
-		txtpnStartTime.setVisible(time);
+		JTextPane txtpnStartDate = new JTextPane();
+		txtpnStartDate.setText("Start Date");
+		txtpnStartDate.setVisible(Date);
 
-		JTextPane txtpnEndTime = new JTextPane();
-		txtpnEndTime.setText("End time");
-		txtpnEndTime.setVisible(time);
+		JTextPane txtpnEndDate = new JTextPane();
+		txtpnEndDate.setText("End Date");
+		txtpnEndDate.setVisible(Date);
 
-		JTextPane txtpnLat = new JTextPane();
+		JTextField txtpnLat = new JTextField();
 		txtpnLat.setText("MinLat");
 		txtpnLat.setVisible(location);
-	
-		JTextPane txtpnLon = new JTextPane();
-		txtpnLon.setText("MinLon");
-		txtpnLon.setVisible(location);
 
-		JTextPane txtpnAlt = new JTextPane();
-		txtpnAlt.setText("MinAlt");
-		txtpnAlt.setVisible(location);
-		
-		JTextPane txtpnMaxlat = new JTextPane();
+		JTextField txtpnMaxlat = new JTextField();
 		txtpnMaxlat.setText("MaxLat");
 		txtpnMaxlat.setVisible(location);
-		
-		JTextPane txtpnMaxalt = new JTextPane();
-		txtpnMaxalt.setText("MaxAlt");
-		txtpnMaxalt.setVisible(location);
-		
-		JTextPane txtpnMaxlon = new JTextPane();
+
+		JTextField txtpnMaxlon = new JTextField();
 		txtpnMaxlon.setText("MaxLon");
 		txtpnMaxlon.setVisible(location);
+
+		JTextField txtpnMaxalt = new JTextField();
+		txtpnMaxalt.setText("MaxAlt");
+		txtpnMaxalt.setVisible(location);
+
+		JTextField txtpnAlt = new JTextField();
+		txtpnAlt.setText("MinAlt");
+		txtpnAlt.setVisible(location);
+
+		JTextField txtpnLon = new JTextField();
+		txtpnLon.setText("MinLon");
+		txtpnLon.setVisible(location);
 
 		JTextPane txtpnIdFilter = new JTextPane();
 		txtpnIdFilter.setText("ID name");
@@ -128,18 +118,7 @@ public class MainMenuGui {
 			public void actionPerformed(ActionEvent e) {
 				if(chckbxNot1Filter.isSelected())
 					notFilter1 = true;
-				else notFilter2 = false;
-				filters();
-				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
-				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
-				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
-				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				
+				else notFilter1 = false;
 			}
 		});
 		chckbxNot1Filter.setBackground(Color.LIGHT_GRAY);
@@ -150,17 +129,6 @@ public class MainMenuGui {
 				if(chckbxNot2Filter.isSelected())
 					notFilter2 = true;
 				else notFilter2 = false;
-				filters();
-				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
-				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
-				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
-				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				
 			}
 		});
 		chckbxNot2Filter.setBackground(Color.LIGHT_GRAY);
@@ -177,6 +145,8 @@ public class MainMenuGui {
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					System.out.println("getSelectedFile() : " 
 							+  chooser.getSelectedFile());
+					a.updateHistoryCSV(ImportCSV.mergeHash(strongPoints, ImportCombinedCSV.filterCSV(chooser.getSelectedFile().getAbsolutePath(), "")));
+					System.out.println(a.getPoints().size());
 				}
 				else {
 					System.out.println("No Selection ");
@@ -195,9 +165,11 @@ public class MainMenuGui {
 				chooser.setAcceptAllFileFilterUsed(false);
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//strongPoints = ImportCSV.validPath(chooser.getSelectedFile().getAbsolutePath()+"\\");
-					watcher p = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",strongPoints);
+					//	System.out.println(a.getPoints().size());
+					p = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",a);
 					p.start();
-					System.out.println("getSelectedFile() : " 
+
+					System.out.println("getSelectedFolder : " 
 							+  chooser.getSelectedFile().getAbsolutePath());
 				}
 				else {
@@ -209,7 +181,7 @@ public class MainMenuGui {
 		JButton btnClearAll = new JButton("Clear all");
 		btnClearAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				strongPoints.clear();
+				a.clear();
 			}
 		});
 
@@ -219,11 +191,17 @@ public class MainMenuGui {
 				JFileChooser chooser = new JFileChooser();
 				chooser.setCurrentDirectory(new java.io.File("."));
 				int retrival = chooser.showSaveDialog(null);
-			    if (retrival == JFileChooser.APPROVE_OPTION) {
-			    	System.out.println("Saving " + strongPoints.size() + " Points..");
-			    	
-			    	ExportCSV.writeCsvFile(strongPoints, chooser.getSelectedFile()+".csv",1);
-			    }
+				if (retrival == JFileChooser.APPROVE_OPTION) {
+					System.out.println("Saving " + a.getPoints().size() + " Points..");
+					Runnable myRunnable = new Runnable(){
+						public void run(){
+							ExportCSV.writeCsvFile(a.getPoints(), chooser.getSelectedFile()+".csv",1);
+							System.out.println("Finished writing CSV");
+						}
+					};
+					Thread t1 = new Thread(myRunnable);
+					t1.start();
+				}
 
 			}
 		});
@@ -232,37 +210,51 @@ public class MainMenuGui {
 		btnSaveKmlFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				JFileChooser chooser = new JFileChooser();
+				chooser.setCurrentDirectory(new java.io.File("."));
+				int retrival = chooser.showSaveDialog(null);
+				if (retrival == JFileChooser.APPROVE_OPTION) {
+					System.out.println("Saving " + a.getPoints().size() + " Points..");
+					Runnable myRunnable = new Runnable(){
+						public void run(){
+							ExportKML.writeKMLFile(a.getPoints(), chooser.getSelectedFile()+".kml",2);
+							System.out.println("Finished writing KML");
+						}
+					};
+					Thread t1 = new Thread(myRunnable);
+					t1.start();
+
+				}
 			}
 		});
 
 		JComboBox comboBoxFilter1 = new JComboBox();
 		comboBoxFilter1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filter1 = (String) comboBoxFilter1.getSelectedItem();
-				filters();
-				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
-				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
-				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
-				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				
+				filter1 = (String)comboBoxFilter1.getSelectedItem();
+				txtpnStartDate.setVisible(filter1.equals("Date")||filter1.equals("Date"));
+				txtpnEndDate.setVisible(filter1.equals("Date")||filter1.equals("Date"));
+				txtpnLat.setVisible(filter1.equals("Location")||filter1.equals("Location"));
+				txtpnLon.setVisible(filter1.equals("Location")||filter1.equals("Location"));
+				txtpnAlt.setVisible(filter1.equals("Location")||filter1.equals("Location"));
+				txtpnIdFilter.setVisible(filter1.equals("ID")||filter1.equals("ID"));
+				txtpnMaxlat.setVisible(filter1.equals("Location")||filter1.equals("Location"));
+				txtpnMaxlon.setVisible(filter1.equals("Location")||filter1.equals("Location"));
+				txtpnMaxalt.setVisible(filter1.equals("Location")||filter1.equals("Location"));
+
 			}
 		});
-		comboBoxFilter1.setModel(new DefaultComboBoxModel(new String[] {"", "Time", "Location", "ID"}));
+		comboBoxFilter1.setModel(new DefaultComboBoxModel(new String[] {"", "Date", "Location", "ID"}));
+		comboBoxFilter1.setToolTipText("filter1");
 		comboBoxFilter1.setMaximumRowCount(4);
-		comboBoxFilter1.setToolTipText("AND\r\nNOT\r\nOR");
+
 
 		JComboBox comboBoxFilter2 = new JComboBox();
 		comboBoxFilter2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filter2 = (String)comboBoxFilter2.getSelectedItem();
-				filters();
-				txtpnStartTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
-				txtpnEndTime.setVisible(filter1.equals("Time")||filter2.equals("Time"));
+				txtpnStartDate.setVisible(filter1.equals("Date")||filter2.equals("Date"));
+				txtpnEndDate.setVisible(filter1.equals("Date")||filter2.equals("Date"));
 				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
 				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
 				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
@@ -270,14 +262,15 @@ public class MainMenuGui {
 				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
 				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
 				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
-				
+
 			}
 		});
-		comboBoxFilter2.setModel(new DefaultComboBoxModel(new String[] {"", "Time", "Location", "ID"}));
-		comboBoxFilter2.setToolTipText("AND\r\nNOT\r\nOR");
+		comboBoxFilter2.setModel(new DefaultComboBoxModel(new String[] {"", "Date", "Location", "ID"}));
+		comboBoxFilter2.setToolTipText("filter2");
 		comboBoxFilter2.setMaximumRowCount(4);
 
 		JRadioButton rdbtnAnd = new JRadioButton("AND");
+		rdbtnAnd.setSelected(true);
 		JRadioButton rdbtnOr = new JRadioButton("OR");
 		rdbtnAnd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -300,105 +293,102 @@ public class MainMenuGui {
 		});
 		rdbtnOr.setBackground(Color.LIGHT_GRAY);
 		rdbtnAnd.setBackground(Color.LIGHT_GRAY);
-		
+
+
+
+		JButton btnUpdateFilter = new JButton("Update Filter");
+		btnUpdateFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String lastFilter1 = "";
+				String lastFilter2 = "";
+				if(((String)comboBoxFilter1.getSelectedItem()).equals("Date"))
+					lastFilter1 = (String)comboBoxFilter1.getSelectedItem() + "="
+							+ txtpnStartDate.getText() + "," + txtpnEndDate.getText();
+				if(((String)comboBoxFilter1.getSelectedItem()).equals("Location"))
+					lastFilter1 = (String)comboBoxFilter1.getSelectedItem() + "=" +
+							txtpnLat.getText() + "," + txtpnMaxlat.getText() +
+							"," + txtpnLon.getText() + "," + txtpnMaxlon.getText()
+							+ "," + txtpnAlt.getText() + "," + txtpnMaxalt.getText();
+				if(((String)comboBoxFilter1.getSelectedItem()).equals("ID"))
+					lastFilter1 = (String)comboBoxFilter1.getSelectedItem() + "=" + txtpnIdFilter.getText();
+
+				if(((String)comboBoxFilter2.getSelectedItem()).equals("Date"))
+					lastFilter2 = (String)comboBoxFilter2.getSelectedItem() + "="
+							+ txtpnStartDate.getText() + "," + txtpnEndDate.getText();
+				if(((String)comboBoxFilter2.getSelectedItem()).equals("Location"))
+					lastFilter2 = (String)comboBoxFilter2.getSelectedItem() + "=" +
+							txtpnLat.getText() + "," + txtpnMaxlat.getText() +
+							"," + txtpnLon.getText() + "," + txtpnMaxlon.getText()
+							+ "," + txtpnAlt.getText() + "," + txtpnMaxalt.getText();
+				if(((String)comboBoxFilter2.getSelectedItem()).equals("ID"))
+					lastFilter2 = (String)comboBoxFilter2.getSelectedItem() + "=" + txtpnIdFilter.getText();
+				
+				filter11 = ImportCombinedCSV.filter(lastFilter1,notFilter1);
+				filter22 = ImportCombinedCSV.filter(lastFilter2,notFilter2);
+				System.out.println(lastFilter1);
+				System.out.println(lastFilter2);
+				if(or)
+					a.filter(filter11, filter22, "OR");
+				//System.out.println("Not " + notFilter1 + lastFilter1 + " or " + "Not " + notFilter2 + lastFilter2 + " ");
+					else if(and)
+						a.filter(filter11, filter22, "AND");
+					//	System.out.println("Not " + notFilter1 + lastFilter1 + " and " + "Not " + notFilter2 + lastFilter2 + " ");
+						System.out.println(a.getPoints().size());
+				filter1 = "";
+				filter2 = "";
+			}
+		});
+
 		JButton btnLoadFilter = new JButton("Load Filter");
+
+		JButton btnSaveFilter = new JButton("Save Filter");
+		btnSaveFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		
+		
+		frame.getContentPane().setLayout(new MigLayout("", "[69px][6px][44px][16px][20px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][][][][][grow]"));
+		frame.getContentPane().add(chckbxNot1Filter, "cell 0 1,alignx right,growy");
+		frame.getContentPane().add(comboBoxFilter1, "cell 2 1 3 1,alignx left,aligny center");
+		frame.getContentPane().add(btnUpdateFilter, "cell 0 2 3 1,alignx right,aligny top");
+		frame.getContentPane().add(rdbtnOr, "cell 6 1 3 1,alignx left,aligny center");
+		frame.getContentPane().add(chckbxNot2Filter, "cell 10 1,alignx left,aligny center");
+		frame.getContentPane().add(comboBoxFilter2, "cell 11 1 3 1,growx,aligny center");
+		frame.getContentPane().add(rdbtnAnd, "cell 6 2 5 1,alignx left,aligny center");
+		frame.getContentPane().add(btnSaveFilter, "cell 15 2,alignx right,aligny bottom");
+		frame.getContentPane().add(btnLoadFilter, "cell 15 1,alignx right,aligny top");
+		frame.getContentPane().add(btnLoadFile, "cell 0 0 7 1,alignx left,aligny top");
+		frame.getContentPane().add(btnSaveCombinedCsv, "cell 8 0 6 1,alignx left,aligny top");
+		frame.getContentPane().add(btnLoadFolder, "cell 15 0,alignx left,aligny top");
+		frame.getContentPane().add(btnClearAll, "cell 16 1,alignx left,aligny top");
+		frame.getContentPane().add(btnSaveKmlFile, "cell 16 0,alignx left,aligny top");
 
 
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(15)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtpnEndTime, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtpnMaxlat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(txtpnMaxalt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtpnMaxlon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtpnStartTime, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtpnLat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(txtpnAlt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(txtpnLon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(txtpnIdFilter, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-								.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-									.addGap(20)
-									.addComponent(chckbxNot1Filter, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(comboBoxFilter1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(rdbtnAnd)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(rdbtnOr)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(chckbxNot2Filter)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(comboBoxFilter2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(btnLoadFilter, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))))
-								.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-									.addComponent(btnLoadFile)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnSaveCombinedCsv)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnLoadFolder)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnClearAll)
-								.addComponent(btnSaveKmlFile))))
-					.addContainerGap(294, Short.MAX_VALUE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnLoadFile)
-						.addComponent(btnSaveCombinedCsv)
-						.addComponent(btnLoadFolder)
-						.addComponent(btnSaveKmlFile))
-					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(comboBoxFilter1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(rdbtnOr)
-								.addComponent(chckbxNot2Filter)
-								.addComponent(chckbxNot1Filter, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-								.addComponent(comboBoxFilter2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnClearAll)
-								.addComponent(btnLoadFilter))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(rdbtnAnd)
-									.addGap(18)
-									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-										.addComponent(txtpnStartTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtpnLat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-								.addComponent(txtpnAlt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtpnLon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(txtpnIdFilter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtpnEndTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtpnMaxalt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtpnMaxlat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtpnMaxlon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(502))
-		);
-		frame.getContentPane().setLayout(groupLayout);
+		frame.getContentPane().add(txtpnIdFilter, "cell 4 3 7 1,growx,aligny top");
+		frame.getContentPane().add(txtpnEndDate, "cell 0 4 3 1,growx,aligny top");
+		frame.getContentPane().add(txtpnStartDate, "cell 0 3 3 1,growx,aligny top");
+
+
+		frame.getContentPane().add(txtpnMaxalt, "cell 2 5 2 1,growx,aligny top");
+
+
+		frame.getContentPane().add(txtpnMaxlon, "cell 4 5 4 1,growx,aligny top");
+
+
+		frame.getContentPane().add(txtpnAlt, "cell 2 6 2 1,growx,aligny top");
+		frame.getContentPane().add(txtpnLat, "cell 0 6 2 1,growx,aligny top");
+		frame.getContentPane().add(txtpnMaxlat, "cell 0 5 2 1,growx,aligny top");
+
+
+		frame.getContentPane().add(txtpnLon, "cell 4 6 4 1,growx,aligny top");
+		
+		JTextArea txtrInfo = new JTextArea();
+		txtrInfo.setText("Info");
+		frame.getContentPane().add(txtrInfo, "cell 11 15");
+		txtrInfo.setEditable(false);
+		txtrInfo.setText("Check one two three");
 		frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{chckbxNot1Filter, btnClearAll, btnSaveCombinedCsv, btnSaveKmlFile, btnLoadFile, btnLoadFolder, chckbxNot2Filter}));
 	}
 }

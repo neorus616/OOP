@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
@@ -22,11 +23,11 @@ public class ImportCombinedCSV {
 	 * @param path -  File path.
 	 * @param filter - Attribute to filter with.
 	 */
-	public static Map<String, Networks> filterCSV(String path, String filter) {
-		Map<String, Networks> strongPoints = new HashMap<>();
+	public static Hashtable<String, Networks> filterCSV(String path, String filter) {
+		Hashtable<String, Networks> strongPoints = new Hashtable<>();
 		try {
 //			String newPath = newPath(path);
-			Filter filter1 = filter(filter);
+			Filter filter1 = filter(filter, false);
 			if(validCSV(path)) {
 				FileReader in = new FileReader(path);
 				BufferedReader bufferedReader = new BufferedReader(in);
@@ -45,7 +46,7 @@ public class ImportCombinedCSV {
 						int signal = Integer.parseInt(record.get("Signal" + i));
 						network = new Networks(id, time, lat, lon, alt);
 						network.add(ssid, mac, signal, channel);
-						if(filter1.test(network)) {
+						if(!filter.equals("") && filter1.test(network)) {
 							if(!strongPoints.containsKey(network.getPoints().get(0).getMAC())) {
 								strongPoints.put(network.getPoints().get(0).getMAC(), network);
 							}
@@ -53,6 +54,18 @@ public class ImportCombinedCSV {
 								strongPoints.remove(network.getPoints().get(0).getMAC());
 								strongPoints.put(network.getPoints().get(0).getMAC(), network);
 							}	
+						}
+						else {
+							for (int k = i+1; k <= Integer.parseInt(record.get("#WIFI Networks")); k++) {
+								mac = record.get("MAC" + k);
+								ssid = record.get("SSID" + k);
+								channel = Integer.parseInt(record.get("Frequncy" + k));
+								signal = Integer.parseInt(record.get("Signal" + k));
+								network.add(ssid, mac, signal, channel);
+							}
+							if(!strongPoints.containsKey(time+id)) {
+								strongPoints.put((time+id), network);
+							}
 						}
 					}
 				}
@@ -90,27 +103,16 @@ public class ImportCombinedCSV {
 		return validCSV;
 	}
 	
-	private static Filter filter(String filter) {
+	public static Filter filter(String filter, boolean not) {
 		int k = filter.lastIndexOf('=');
-		if(filter.contains("id")) //id = lenovo
-			return new IDFilter(filter.substring(k+1).trim());
-		if(filter.contains("location")) //location = 100,200,150,200,30,60
-			return new LocationFilter(filter.substring(k+1).trim().split(","));
-		if(filter.contains("date")) //date = 2017-10-27 16:27:03,2017-10-27 16:37:03
-			return new TimeFilter(filter.substring(k+1).trim().split(","));
+		if(filter.contains("ID")) //ID = lenovo
+			return new IDFilter(filter.substring(k+1).trim(), !not);
+		if(filter.contains("Location")) //Location = 100,200,150,200,30,60
+			return new LocationFilter(filter.substring(k+1).trim().split(","), !not);
+		if(filter.contains("Date")) //Date = 2017-10-27 16:27:03,2017-10-27 16:37:03
+			return new TimeFilter(filter.substring(k+1).trim().split(","), !not);
 		return null;
 	}
-
-//	/**
-//	 * 
-//	 * Gets the directory where the combined CSV is located(to save later the KML file).
-//	 * @param path - hold file path.
-//	 * @return newPath - directory path. 
-//	 */
-//	private static String newPath(String path) {
-//		int k = path.lastIndexOf("/");
-//		int j = path.lastIndexOf("\\");
-//		String newPath = k<j ? path.substring(0,j+1) : path.substring(0,k+1);
-//		return newPath;
-//	}
+	
+	
 }
