@@ -46,7 +46,7 @@ public class ExportCSV {
 	 * @param network - object that contains: id, time, location and #WiFi networks (up to 10 points).
 	 * @param fileName - holds the path and file name where it saves the new CSV file.
 	 */
-	static void writeCsvFile(Hashtable<String, Networks> strongPoints, String fileName, int state) {
+	public static void writeCsvFile(Hashtable<String, Networks> strongPoints, String fileName, int state) {
 		FileWriter fileWriter = null;
 		CSVPrinter csvFilePrinter = null;
 		//Create the CSVFormat object with "\n" as a record delimiter

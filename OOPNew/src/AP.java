@@ -2,9 +2,9 @@
 public class AP extends Wifi {
 	
 	
-	double _lat = 0;
-	double _lon = 0;
-	double _alt = 0;
+	private double _lat = 0;
+	private double _lon = 0;
+	private double _alt = 0;
 
 	public AP(String ssid, String mac, int signal, int channel, double lat, double lon, double alt) {
 		super(ssid, mac, signal, channel);
