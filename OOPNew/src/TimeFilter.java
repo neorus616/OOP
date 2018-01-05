@@ -48,8 +48,9 @@ public class TimeFilter implements Filter {
 
 	@Override
 	public String toString() {
-		return "TimeFilter [_start=" + _start + ", _end=" + _end + ", _not=" + _not + ", toString()=" + super.toString()
-				+ "]";
+		if(!_not)
+		return "Not(TimeFilter [_start=" + _start + ", _end=" + _end + "])";
+		else return "TimeFilter [_start=" + _start + ", _end=" + _end + "]";
 	}
 
 }

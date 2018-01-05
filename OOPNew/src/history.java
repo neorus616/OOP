@@ -33,24 +33,26 @@ public class history {
 		filteredStrongPoints.clear();
 	}
 
-	public void filter(Filter filter1, Filter filter2, String operator) {
+	public void filter(Filter filter) {
 		filteredStrongPoints = new Hashtable<>();
 		for (String key : this.strongPoints.keySet()) {
-			if(filter1 == null) {
-				if(filter2.test(this.strongPoints.get(key)))
-					this.filteredStrongPoints.put(key, strongPoints.get(key));
-			}
-			else if(filter2 == null) {
-				if(filter1.test(this.strongPoints.get(key)))
-					this.filteredStrongPoints.put(key, strongPoints.get(key));
-			}
-			else if(operator.equals("AND")) {
-				if((filter1.test(this.strongPoints.get(key))) && (filter2.test(this.strongPoints.get(key))))
-					this.filteredStrongPoints.put(key, strongPoints.get(key));
-			} else if(operator.equals("OR")) {
-				if((filter1.test(strongPoints.get(key))) || (filter2.test(strongPoints.get(key))))
-					this.filteredStrongPoints.put(key, strongPoints.get(key));
-			}
+			if(filter.test(this.strongPoints.get(key)))
+				this.filteredStrongPoints.put(key, this.strongPoints.get(key));
+//			if(filter1 == null) {
+//				if(filter2.test(this.strongPoints.get(key)))
+//					this.filteredStrongPoints.put(key, strongPoints.get(key));
+//			}
+//			else if(filter2 == null) {
+//				if(filter1.test(this.strongPoints.get(key)))
+//					this.filteredStrongPoints.put(key, strongPoints.get(key));
+//			}
+//			else if(operator.equals("AND")) {
+//				if((filter1.test(this.strongPoints.get(key))) && (filter2.test(this.strongPoints.get(key))))
+//					this.filteredStrongPoints.put(key, strongPoints.get(key));
+//			} else if(operator.equals("OR")) {
+//				if((filter1.test(strongPoints.get(key))) || (filter2.test(strongPoints.get(key))))
+//					this.filteredStrongPoints.put(key, strongPoints.get(key));
+//			}
 		}
 		System.out.println("Filtered " + filteredStrongPoints.size() + " Points");
 	}

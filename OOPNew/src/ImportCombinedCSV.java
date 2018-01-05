@@ -114,5 +114,18 @@ public class ImportCombinedCSV {
 		return null;
 	}
 	
+	public static Filter filter(Filter filter1, Filter filter2, String operator) {
+		if(filter1 == null)
+			return filter2;
+		else if (filter2 == null)
+			return filter1;
+		else if(operator.equals("AND"))
+			return new AndFilter(filter1, filter2);
+		else if(operator.equals("OR"))
+			return new OrFilter(filter1,filter2);
+		return null;
+		
+	}
+	
 	
 }

@@ -53,9 +53,11 @@ public class LocationFilter implements Filter {
 
 	@Override
 	public String toString() {
-		return "LocationFilter [_maxAlt=" + _maxAlt + ", _minAlt=" + _minAlt + ", _maxLon=" + _maxLon + ", _minLon="
-				+ _minLon + ", _maxLat=" + _maxLat + ", _minLat=" + _minLat + ", _not=" + _not + ", toString()="
-				+ super.toString() + "]";
+		if(_not)
+			return "LocationFilter [_maxAlt=" + _maxAlt + ", _minAlt=" + _minAlt + ", _maxLon=" + _maxLon + ", _minLon="
+			+ _minLon + ", _maxLat=" + _maxLat + ", _minLat=" + _minLat + "]";
+		else return "Not(LocationFilter [_maxAlt=" + _maxAlt + ", _minAlt=" + _minAlt + ", _maxLon=" + _maxLon + ", _minLon="
+		+ _minLon + ", _maxLat=" + _maxLat + ", _minLat=" + _minLat + "])";
 	}
 	
 	

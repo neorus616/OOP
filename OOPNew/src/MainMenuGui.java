@@ -4,14 +4,14 @@ import javax.swing.JButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Color;
 import javax.swing.JCheckBox;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Hashtable;
-import java.util.Map;
 import java.awt.event.ActionEvent;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
@@ -20,7 +20,6 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.JFormattedTextField;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextArea;
 
@@ -39,6 +38,7 @@ public class MainMenuGui {
 	boolean notFilter2 = false;
 	Filter filter11;
 	Filter filter22;
+	Filter orAndfilter;
 
 	private JFrame frame;
 
@@ -111,7 +111,10 @@ public class MainMenuGui {
 		JTextPane txtpnIdFilter = new JTextPane();
 		txtpnIdFilter.setText("ID name");
 		txtpnIdFilter.setVisible(id);
-
+		
+		JTextArea txtrInfo = new JTextArea();
+		txtrInfo.setEditable(false);
+		txtrInfo.setText("Empty filter");
 
 		JCheckBox chckbxNot1Filter = new JCheckBox("Not");
 		chckbxNot1Filter.addActionListener(new ActionListener() {
@@ -274,7 +277,10 @@ public class MainMenuGui {
 		JRadioButton rdbtnOr = new JRadioButton("OR");
 		rdbtnAnd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(rdbtnAnd.isSelected()) {
+				if(and) {
+					rdbtnAnd.setSelected(and);
+				}
+				else if(rdbtnAnd.isSelected()) {
 					and = true;
 					or = false;
 					rdbtnOr.setSelected(false);
@@ -284,11 +290,14 @@ public class MainMenuGui {
 
 		rdbtnOr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(rdbtnOr.isSelected()) {
-					or = true;
-					and = false;
-					rdbtnAnd.setSelected(false);
+				if(or) {
+					rdbtnOr.setSelected(or);
 				}
+				else if(rdbtnOr.isSelected()) {
+						or = true;
+						and = false;
+						rdbtnAnd.setSelected(false);
+					}
 			}
 		});
 		rdbtnOr.setBackground(Color.LIGHT_GRAY);
@@ -327,28 +336,70 @@ public class MainMenuGui {
 				filter22 = ImportCombinedCSV.filter(lastFilter2,notFilter2);
 				System.out.println(lastFilter1);
 				System.out.println(lastFilter2);
-				if(or)
-					a.filter(filter11, filter22, "OR");
+				if(or) {
+					orAndfilter = ImportCombinedCSV.filter(filter11,filter22,"OR");
+					a.filter(orAndfilter);
+				}
+					
+					//System.out.println(filter11 + " or " + filter22);
 				//System.out.println("Not " + notFilter1 + lastFilter1 + " or " + "Not " + notFilter2 + lastFilter2 + " ");
-					else if(and)
-						a.filter(filter11, filter22, "AND");
+					else if(and) {
+						orAndfilter = ImportCombinedCSV.filter(filter11,filter22,"AND");
+						a.filter(orAndfilter);
+					}
+						//System.out.println(filter11 + " and " + filter22);
 					//	System.out.println("Not " + notFilter1 + lastFilter1 + " and " + "Not " + notFilter2 + lastFilter2 + " ");
-						System.out.println(a.getPoints().size());
-				filter1 = "";
-				filter2 = "";
+						txtrInfo.setText(orAndfilter.toString());
 			}
 		});
 
 		JButton btnLoadFilter = new JButton("Load Filter");
+		btnLoadFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser chooser = new JFileChooser();
+				chooser = new JFileChooser(); 
+				chooser.setCurrentDirectory(new java.io.File("."));
+				chooser.setDialogTitle(null);
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Filter file", "ser");
+				chooser.setFileFilter(filter);
+				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					System.out.println("getSelectedFile() : " 
+							+  chooser.getSelectedFile());
+					try {
+						readFilter(chooser.getSelectedFile().getAbsolutePath());
+					} catch (ClassNotFoundException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println(a.getPoints().size());
+				}
+				else {
+					System.out.println("No Selection ");
+				}
+				System.out.println("Loaded filter: " + orAndfilter.toString());
+				txtrInfo.setText(orAndfilter.toString());
+			}
+		});
 
 		JButton btnSaveFilter = new JButton("Save Filter");
 		btnSaveFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				JFileChooser chooser = new JFileChooser();
+				chooser.setCurrentDirectory(new java.io.File("."));
+				int retrival = chooser.showSaveDialog(null);
+				if (retrival == JFileChooser.APPROVE_OPTION) {
+					try {
+						writeFilter(chooser.getSelectedFile()+".ser");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				System.out.println("Saved filter: " + orAndfilter.toString());
 			}
 		});
 		
-		
+
 		frame.getContentPane().setLayout(new MigLayout("", "[69px][6px][44px][16px][20px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][][][][][grow]"));
 		frame.getContentPane().add(chckbxNot1Filter, "cell 0 1,alignx right,growy");
 		frame.getContentPane().add(comboBoxFilter1, "cell 2 1 3 1,alignx left,aligny center");
@@ -364,7 +415,6 @@ public class MainMenuGui {
 		frame.getContentPane().add(btnLoadFolder, "cell 15 0,alignx left,aligny top");
 		frame.getContentPane().add(btnClearAll, "cell 16 1,alignx left,aligny top");
 		frame.getContentPane().add(btnSaveKmlFile, "cell 16 0,alignx left,aligny top");
-
 
 		frame.getContentPane().add(txtpnIdFilter, "cell 4 3 7 1,growx,aligny top");
 		frame.getContentPane().add(txtpnEndDate, "cell 0 4 3 1,growx,aligny top");
@@ -383,12 +433,29 @@ public class MainMenuGui {
 
 
 		frame.getContentPane().add(txtpnLon, "cell 4 6 4 1,growx,aligny top");
+				
+
+						frame.getContentPane().add(txtrInfo, "cell 0 8 17 1");
 		
-		JTextArea txtrInfo = new JTextArea();
-		txtrInfo.setText("Info");
-		frame.getContentPane().add(txtrInfo, "cell 11 15");
-		txtrInfo.setEditable(false);
-		txtrInfo.setText("Check one two three");
+		
+	
 		frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{chckbxNot1Filter, btnClearAll, btnSaveCombinedCsv, btnSaveKmlFile, btnLoadFile, btnLoadFolder, chckbxNot2Filter}));
 	}
+
+	protected void writeFilter(String fileName) throws IOException {
+		// TODO Auto-generated method stub
+		    FileOutputStream fos = new FileOutputStream(fileName);
+		    ObjectOutputStream oos = new ObjectOutputStream(fos);
+		    oos.writeObject(orAndfilter);
+		    oos.close();
+	}
+	
+	protected void readFilter(String fileName) throws IOException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		FileInputStream fis = new FileInputStream(fileName);
+	    ObjectInputStream ois = new ObjectInputStream(fis);
+	    orAndfilter = (Filter) ois.readObject();
+	    ois.close();
+	}
+	
 }
