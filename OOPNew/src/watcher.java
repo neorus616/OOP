@@ -8,7 +8,7 @@ public class watcher extends Thread {
 	long _size;
 	history _a;
 
-	
+
 	public watcher(String path, history a) {
 		this._f = new File(path);
 		this._modified = _f.lastModified();
@@ -16,7 +16,7 @@ public class watcher extends Thread {
 		this._a.updateHistory(a.getPoints());
 		this._size = _f.length();
 	}
-	
+
 	@Override
 	public void run() {
 		this._a.updateHistory(ImportCSV.mergeHash(this._a.getPoints(), ImportCSV.validPath(this._f.getAbsolutePath()+"\\")));
@@ -24,6 +24,7 @@ public class watcher extends Thread {
 		while(true) {
 			if(this._modified != this._f.lastModified()) {
 				System.out.println("changed!!!!");
+
 				this._modified = this._f.lastModified();
 				try {
 					sleep(500);
@@ -31,8 +32,7 @@ public class watcher extends Thread {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-					this._a.updateHistory(ImportCSV.validPath(this._f.getAbsolutePath()+"\\"));
-					System.out.println(this._a.getPoints().size());
+				this._a.updateHistory(ImportCSV.validPath(this._f.getAbsolutePath()+"\\"));
 			}
 		}
 	}

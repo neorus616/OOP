@@ -15,7 +15,7 @@ import java.util.Hashtable;
 import java.awt.event.ActionEvent;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
-import javax.swing.JTextPane;
+import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
@@ -76,11 +76,11 @@ public class MainMenuGui {
 		frame.setBounds(100, 100, 710, 615);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JTextPane txtpnStartDate = new JTextPane();
+		JTextField txtpnStartDate = new JTextField();
 		txtpnStartDate.setText("Start Date");
 		txtpnStartDate.setVisible(Date);
 
-		JTextPane txtpnEndDate = new JTextPane();
+		JTextField txtpnEndDate = new JTextField();
 		txtpnEndDate.setText("End Date");
 		txtpnEndDate.setVisible(Date);
 
@@ -108,13 +108,36 @@ public class MainMenuGui {
 		txtpnLon.setText("MinLon");
 		txtpnLon.setVisible(location);
 
-		JTextPane txtpnIdFilter = new JTextPane();
+		JTextField txtpnIdFilter = new JTextField();
 		txtpnIdFilter.setText("ID name");
 		txtpnIdFilter.setVisible(id);
-		
+
 		JTextArea txtrInfo = new JTextArea();
 		txtrInfo.setEditable(false);
 		txtrInfo.setText("Empty filter");
+
+		JTextArea txtrEmptyDatabase = new JTextArea();
+		txtrEmptyDatabase.setText("Empty Database");
+		txtrEmptyDatabase.setEditable(false);
+
+		JTextArea txtrMacsAddresses = new JTextArea();
+		txtrMacsAddresses.setText("0 MAC's Addresses");
+		txtrMacsAddresses.setEditable(false);
+
+		JRadioButton rdbtnAnd = new JRadioButton("AND");
+		rdbtnAnd.setSelected(true);
+
+		JRadioButton rdbtnOr = new JRadioButton("OR");
+
+		JComboBox comboBoxFilter1 = new JComboBox();
+		comboBoxFilter1.setModel(new DefaultComboBoxModel(new String[] {"", "Date", "Location", "ID"}));
+		comboBoxFilter1.setToolTipText("filter1");
+		comboBoxFilter1.setMaximumRowCount(4);
+
+		JComboBox comboBoxFilter2 = new JComboBox();
+		comboBoxFilter2.setModel(new DefaultComboBoxModel(new String[] {"", "Date", "Location", "ID"}));
+		comboBoxFilter2.setToolTipText("filter2");
+		comboBoxFilter2.setMaximumRowCount(4);
 
 		JCheckBox chckbxNot1Filter = new JCheckBox("Not");
 		chckbxNot1Filter.addActionListener(new ActionListener() {
@@ -149,7 +172,9 @@ public class MainMenuGui {
 					System.out.println("getSelectedFile() : " 
 							+  chooser.getSelectedFile());
 					a.updateHistoryCSV(ImportCSV.mergeHash(strongPoints, ImportCombinedCSV.filterCSV(chooser.getSelectedFile().getAbsolutePath(), "")));
-					System.out.println(a.getPoints().size());
+
+					txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
+					txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
 				}
 				else {
 					System.out.println("No Selection ");
@@ -167,17 +192,37 @@ public class MainMenuGui {
 				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				chooser.setAcceptAllFileFilterUsed(false);
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//strongPoints = ImportCSV.validPath(chooser.getSelectedFile().getAbsolutePath()+"\\");
-					//	System.out.println(a.getPoints().size());
+
 					p = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",a);
 					p.start();
 
+					Runnable updater = new Runnable(){
+						public void run(){
+							while(watcher.holdsLock(a)) {
+							}
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
+							txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+						}
+					};
+					Thread t2 = new Thread(updater);
+					t2.start();
+
 					System.out.println("getSelectedFolder : " 
 							+  chooser.getSelectedFile().getAbsolutePath());
+					btnLoadFolder.setEnabled(false);					
 				}
 				else {
 					System.out.println("No Selection ");
 				}
+				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
+
 			}
 		});
 
@@ -185,6 +230,10 @@ public class MainMenuGui {
 		btnClearAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				a.clear();
+				btnLoadFolder.setEnabled(true);
+				txtrInfo.setText("Empty filter");
+				txtrEmptyDatabase.setText("Empty Database");
+				txtrMacsAddresses.setText("0 MAC's Addresses");
 			}
 		});
 
@@ -231,28 +280,25 @@ public class MainMenuGui {
 			}
 		});
 
-		JComboBox comboBoxFilter1 = new JComboBox();
+
 		comboBoxFilter1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filter1 = (String)comboBoxFilter1.getSelectedItem();
-				txtpnStartDate.setVisible(filter1.equals("Date")||filter1.equals("Date"));
-				txtpnEndDate.setVisible(filter1.equals("Date")||filter1.equals("Date"));
-				txtpnLat.setVisible(filter1.equals("Location")||filter1.equals("Location"));
-				txtpnLon.setVisible(filter1.equals("Location")||filter1.equals("Location"));
-				txtpnAlt.setVisible(filter1.equals("Location")||filter1.equals("Location"));
-				txtpnIdFilter.setVisible(filter1.equals("ID")||filter1.equals("ID"));
-				txtpnMaxlat.setVisible(filter1.equals("Location")||filter1.equals("Location"));
-				txtpnMaxlon.setVisible(filter1.equals("Location")||filter1.equals("Location"));
-				txtpnMaxalt.setVisible(filter1.equals("Location")||filter1.equals("Location"));
-
+				txtpnStartDate.setVisible(filter1.equals("Date")||filter2.equals("Date"));
+				txtpnEndDate.setVisible(filter1.equals("Date")||filter2.equals("Date"));
+				txtpnLat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnLon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnAlt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnIdFilter.setVisible(filter1.equals("ID")||filter2.equals("ID"));
+				txtpnMaxlat.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxlon.setVisible(filter1.equals("Location")||filter2.equals("Location"));
+				txtpnMaxalt.setVisible(filter1.equals("Location")||filter2.equals("Location"));
 			}
 		});
-		comboBoxFilter1.setModel(new DefaultComboBoxModel(new String[] {"", "Date", "Location", "ID"}));
-		comboBoxFilter1.setToolTipText("filter1");
-		comboBoxFilter1.setMaximumRowCount(4);
 
 
-		JComboBox comboBoxFilter2 = new JComboBox();
+
+
 		comboBoxFilter2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filter2 = (String)comboBoxFilter2.getSelectedItem();
@@ -268,13 +314,9 @@ public class MainMenuGui {
 
 			}
 		});
-		comboBoxFilter2.setModel(new DefaultComboBoxModel(new String[] {"", "Date", "Location", "ID"}));
-		comboBoxFilter2.setToolTipText("filter2");
-		comboBoxFilter2.setMaximumRowCount(4);
 
-		JRadioButton rdbtnAnd = new JRadioButton("AND");
-		rdbtnAnd.setSelected(true);
-		JRadioButton rdbtnOr = new JRadioButton("OR");
+
+
 		rdbtnAnd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(and) {
@@ -294,10 +336,10 @@ public class MainMenuGui {
 					rdbtnOr.setSelected(or);
 				}
 				else if(rdbtnOr.isSelected()) {
-						or = true;
-						and = false;
-						rdbtnAnd.setSelected(false);
-					}
+					or = true;
+					and = false;
+					rdbtnAnd.setSelected(false);
+				}
 			}
 		});
 		rdbtnOr.setBackground(Color.LIGHT_GRAY);
@@ -331,7 +373,7 @@ public class MainMenuGui {
 							+ "," + txtpnAlt.getText() + "," + txtpnMaxalt.getText();
 				if(((String)comboBoxFilter2.getSelectedItem()).equals("ID"))
 					lastFilter2 = (String)comboBoxFilter2.getSelectedItem() + "=" + txtpnIdFilter.getText();
-				
+
 				filter11 = ImportCombinedCSV.filter(lastFilter1,notFilter1);
 				filter22 = ImportCombinedCSV.filter(lastFilter2,notFilter2);
 				System.out.println(lastFilter1);
@@ -340,18 +382,16 @@ public class MainMenuGui {
 					orAndfilter = ImportCombinedCSV.filter(filter11,filter22,"OR");
 					a.filter(orAndfilter);
 				}
-					
-					//System.out.println(filter11 + " or " + filter22);
-				//System.out.println("Not " + notFilter1 + lastFilter1 + " or " + "Not " + notFilter2 + lastFilter2 + " ");
-					else if(and) {
-						orAndfilter = ImportCombinedCSV.filter(filter11,filter22,"AND");
-						a.filter(orAndfilter);
-					}
-						//System.out.println(filter11 + " and " + filter22);
-					//	System.out.println("Not " + notFilter1 + lastFilter1 + " and " + "Not " + notFilter2 + lastFilter2 + " ");
-						txtrInfo.setText(orAndfilter.toString());
+				else if(and) {
+					orAndfilter = ImportCombinedCSV.filter(filter11,filter22,"AND");
+					a.filter(orAndfilter);
+				}
+				txtrInfo.setText(orAndfilter.toString());
+				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
+				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
 			}
 		});
+
 
 		JButton btnLoadFilter = new JButton("Load Filter");
 		btnLoadFilter.addActionListener(new ActionListener() {
@@ -377,7 +417,11 @@ public class MainMenuGui {
 					System.out.println("No Selection ");
 				}
 				System.out.println("Loaded filter: " + orAndfilter.toString());
+
+				a.filter(orAndfilter);
 				txtrInfo.setText(orAndfilter.toString());
+				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
+				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
 			}
 		});
 
@@ -398,64 +442,63 @@ public class MainMenuGui {
 				System.out.println("Saved filter: " + orAndfilter.toString());
 			}
 		});
-		
 
-		frame.getContentPane().setLayout(new MigLayout("", "[69px][6px][44px][16px][20px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][][][][][grow]"));
-		frame.getContentPane().add(chckbxNot1Filter, "cell 0 1,alignx right,growy");
-		frame.getContentPane().add(comboBoxFilter1, "cell 2 1 3 1,alignx left,aligny center");
-		frame.getContentPane().add(btnUpdateFilter, "cell 0 2 3 1,alignx right,aligny top");
-		frame.getContentPane().add(rdbtnOr, "cell 6 1 3 1,alignx left,aligny center");
-		frame.getContentPane().add(chckbxNot2Filter, "cell 10 1,alignx left,aligny center");
-		frame.getContentPane().add(comboBoxFilter2, "cell 11 1 3 1,growx,aligny center");
-		frame.getContentPane().add(rdbtnAnd, "cell 6 2 5 1,alignx left,aligny center");
-		frame.getContentPane().add(btnSaveFilter, "cell 15 2,alignx right,aligny bottom");
-		frame.getContentPane().add(btnLoadFilter, "cell 15 1,alignx right,aligny top");
-		frame.getContentPane().add(btnLoadFile, "cell 0 0 7 1,alignx left,aligny top");
-		frame.getContentPane().add(btnSaveCombinedCsv, "cell 8 0 6 1,alignx left,aligny top");
-		frame.getContentPane().add(btnLoadFolder, "cell 15 0,alignx left,aligny top");
-		frame.getContentPane().add(btnClearAll, "cell 16 1,alignx left,aligny top");
-		frame.getContentPane().add(btnSaveKmlFile, "cell 16 0,alignx left,aligny top");
+		JButton btnClearFilter = new JButton("Clear Filter");
+		btnClearFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				a.filteredStrongPoints.clear();
+				txtrInfo.setText("Empty Filter");
+				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
+				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+			}
+		});
 
-		frame.getContentPane().add(txtpnIdFilter, "cell 4 3 7 1,growx,aligny top");
-		frame.getContentPane().add(txtpnEndDate, "cell 0 4 3 1,growx,aligny top");
-		frame.getContentPane().add(txtpnStartDate, "cell 0 3 3 1,growx,aligny top");
-
-
-		frame.getContentPane().add(txtpnMaxalt, "cell 2 5 2 1,growx,aligny top");
-
-
-		frame.getContentPane().add(txtpnMaxlon, "cell 4 5 4 1,growx,aligny top");
-
-
-		frame.getContentPane().add(txtpnAlt, "cell 2 6 2 1,growx,aligny top");
-		frame.getContentPane().add(txtpnLat, "cell 0 6 2 1,growx,aligny top");
-		frame.getContentPane().add(txtpnMaxlat, "cell 0 5 2 1,growx,aligny top");
-
-
-		frame.getContentPane().add(txtpnLon, "cell 4 6 4 1,growx,aligny top");
-				
-
-						frame.getContentPane().add(txtrInfo, "cell 0 8 17 1");
-		
-		
-	
+		frame.getContentPane().setLayout(new MigLayout("", "[25.00px,grow][6px][44px][16px][20px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][23.00,grow][][][][grow]"));
+		frame.getContentPane().add(chckbxNot1Filter, "cell 0 1");
+		frame.getContentPane().add(comboBoxFilter1, "cell 2 1 3 1");
+		frame.getContentPane().add(btnUpdateFilter, "cell 0 2 3 1");
+		frame.getContentPane().add(rdbtnOr, "cell 6 1 3 1");
+		frame.getContentPane().add(chckbxNot2Filter, "cell 10 1");
+		frame.getContentPane().add(comboBoxFilter2, "cell 11 1 3 1");
+		frame.getContentPane().add(rdbtnAnd, "cell 6 2 5 1");
+		frame.getContentPane().add(btnSaveFilter, "cell 15 2");
+		frame.getContentPane().add(btnLoadFilter, "cell 15 1");
+		frame.getContentPane().add(btnLoadFile, "cell 0 0 7 1");
+		frame.getContentPane().add(btnSaveCombinedCsv, "cell 8 0 6 1");
+		frame.getContentPane().add(btnLoadFolder, "cell 15 0");
+		frame.getContentPane().add(btnClearAll, "cell 16 1");
+		frame.getContentPane().add(btnSaveKmlFile, "cell 16 0");
+		frame.getContentPane().add(btnClearFilter, "cell 16 2");
+		frame.getContentPane().add(txtpnIdFilter, "cell 4 3 7 1");
+		frame.getContentPane().add(txtpnEndDate, "cell 0 4 3 1");
+		frame.getContentPane().add(txtpnStartDate, "cell 0 3 3 1");
+		frame.getContentPane().add(txtpnMaxalt, "cell 2 5 2 1");
+		frame.getContentPane().add(txtpnMaxlon, "cell 4 5 4 1");
+		frame.getContentPane().add(txtpnAlt, "cell 2 6 2 1");
+		frame.getContentPane().add(txtpnLat, "cell 0 6 2 1");
+		frame.getContentPane().add(txtpnMaxlat, "cell 0 5 2 1");
+		frame.getContentPane().add(txtpnLon, "cell 4 6 4 1");
+		frame.getContentPane().add(txtrInfo, "cell 0 8 17 1");
+		frame.getContentPane().add(txtrEmptyDatabase, "cell 0 9 17 1");
+		frame.getContentPane().add(txtrMacsAddresses, "cell 0 10 17 1");
 		frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{chckbxNot1Filter, btnClearAll, btnSaveCombinedCsv, btnSaveKmlFile, btnLoadFile, btnLoadFolder, chckbxNot2Filter}));
+
 	}
 
 	protected void writeFilter(String fileName) throws IOException {
 		// TODO Auto-generated method stub
-		    FileOutputStream fos = new FileOutputStream(fileName);
-		    ObjectOutputStream oos = new ObjectOutputStream(fos);
-		    oos.writeObject(orAndfilter);
-		    oos.close();
+		FileOutputStream fos = new FileOutputStream(fileName);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(orAndfilter);
+		oos.close();
 	}
-	
+
 	protected void readFilter(String fileName) throws IOException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		FileInputStream fis = new FileInputStream(fileName);
-	    ObjectInputStream ois = new ObjectInputStream(fis);
-	    orAndfilter = (Filter) ois.readObject();
-	    ois.close();
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		orAndfilter = (Filter) ois.readObject();
+		ois.close();
 	}
-	
+
 }
