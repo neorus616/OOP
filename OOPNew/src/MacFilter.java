@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
@@ -23,8 +24,8 @@ public class MacFilter {
 	 * @param path -  File path.
 	 * @param wifiScan - User current APs scan.
 	 */
-	public static ArrayList<Networks> test(String path, Networks wifiScan) {
-		ArrayList<Networks> APs = new ArrayList<Networks>();
+	public static Hashtable<String, Networks> test(String path, Networks wifiScan) {
+		Hashtable<String, Networks> APs = new Hashtable<>();
 		try {
 			if(validCSV(path)) {
 				FileReader in = new FileReader(path);
@@ -53,11 +54,10 @@ public class MacFilter {
 					}
 					if(isSample) {
 						//System.out.println(network);
-						APs.add(network);
+						APs.put(time+id, network);
 					}
 					network = new Networks();
 				}
-				
 			}
 			else throw new IllegalArgumentException("Not a valid CSV file !");
 

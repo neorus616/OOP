@@ -22,6 +22,15 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextArea;
+import javax.swing.JPopupMenu;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JToggleButton;
+import java.awt.Dimension;
+import java.awt.Button;
+import javax.swing.ImageIcon;
 
 public class MainMenuGui {
 
@@ -296,9 +305,6 @@ public class MainMenuGui {
 			}
 		});
 
-
-
-
 		comboBoxFilter2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filter2 = (String)comboBoxFilter2.getSelectedItem();
@@ -314,8 +320,6 @@ public class MainMenuGui {
 
 			}
 		});
-
-
 
 		rdbtnAnd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -344,8 +348,6 @@ public class MainMenuGui {
 		});
 		rdbtnOr.setBackground(Color.LIGHT_GRAY);
 		rdbtnAnd.setBackground(Color.LIGHT_GRAY);
-
-
 
 		JButton btnUpdateFilter = new JButton("Update Filter");
 		btnUpdateFilter.addActionListener(new ActionListener() {
@@ -453,7 +455,7 @@ public class MainMenuGui {
 			}
 		});
 
-		frame.getContentPane().setLayout(new MigLayout("", "[25.00px,grow][6px][44px][16px][20px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][23.00,grow][][][][grow]"));
+		frame.getContentPane().setLayout(new MigLayout("", "[75.00px][6px][75px][16px][75px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][23.00,grow][][][][grow]"));
 		frame.getContentPane().add(chckbxNot1Filter, "cell 0 1");
 		frame.getContentPane().add(comboBoxFilter1, "cell 2 1 3 1");
 		frame.getContentPane().add(btnUpdateFilter, "cell 0 2 3 1");
@@ -474,6 +476,23 @@ public class MainMenuGui {
 		frame.getContentPane().add(txtpnStartDate, "cell 0 3 3 1");
 		frame.getContentPane().add(txtpnMaxalt, "cell 2 5 2 1");
 		frame.getContentPane().add(txtpnMaxlon, "cell 4 5 4 1");
+		
+		JButton btnFindApLocationalgo = new JButton("Find AP Location(Algo 1)");
+		btnFindApLocationalgo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s = (String)JOptionPane.showInputDialog(
+	                    frame,
+	                    "Enter MAC Address to find AP location:\n",
+	                    "Algo 1",
+	                    JOptionPane.PLAIN_MESSAGE,
+	                    null, null,
+	                    "a4:2b:b0:ad:2d:34");
+				System.out.println(s);
+			}
+		});
+		
+		btnFindApLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
+		frame.getContentPane().add(btnFindApLocationalgo, "cell 15 5 1 2,grow");
 		frame.getContentPane().add(txtpnAlt, "cell 2 6 2 1");
 		frame.getContentPane().add(txtpnLat, "cell 0 6 2 1");
 		frame.getContentPane().add(txtpnMaxlat, "cell 0 5 2 1");
@@ -501,4 +520,6 @@ public class MainMenuGui {
 		ois.close();
 	}
 
+	private static void addPopup(Component component, final JPopupMenu popup) {
+	}
 }

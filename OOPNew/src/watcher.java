@@ -23,8 +23,7 @@ public class watcher extends Thread {
 		System.out.println(this._a.getPoints().size());
 		while(true) {
 			if(this._modified != this._f.lastModified()) {
-				System.out.println("changed!!!!");
-
+				System.out.println("changed");
 				this._modified = this._f.lastModified();
 				try {
 					sleep(500);

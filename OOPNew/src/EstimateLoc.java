@@ -103,13 +103,13 @@ public class EstimateLoc {
 		double weight = 1;
 		int c = 0;
 		boolean isMatch = false;
-		ArrayList<Networks> db = MacFilter.test(filename, userNetwork);
-		for (Networks networks : db) {
+		Hashtable<String, Networks> db = MacFilter.test(filename, userNetwork);
+		for (String network : db.keySet()) {
 			for (int i = 0; i < userNetwork.getPoints().size(); i++) {
-				for (int j = 0; j < networks.getPoints().size(); j++) {
-					if(userNetwork.getPoints().get(i).getMAC().equals(networks.getPoints().get(j).getMAC())) {
+				for (int j = 0; j < db.get(network).getPoints().size(); j++) {
+					if(userNetwork.getPoints().get(i).getMAC().equals(db.get(network).getPoints().get(j).getMAC())) {
 						weight *= NORM /(
-								Math.pow(difference(userNetwork.getPoints().get(i), networks.getPoints().get(j)),SIG_DIFF) *
+								Math.pow(difference(userNetwork.getPoints().get(i), db.get(network).getPoints().get(j)),SIG_DIFF) *
 								Math.pow(userNetwork.getPoints().get(i).getSignal(), POWER));
 						isMatch = true;
 						if(weight > 2) {
@@ -127,14 +127,14 @@ public class EstimateLoc {
 			}
 			if(c < k) {
 				bestPi[c] = weight;
-				bestNetworks[c] = networks;
+				bestNetworks[c] = db.get(network);
 				c++;
 			}
 			else {
 				int min = min(bestPi);
 				if(bestPi[min] < weight) {
 					bestPi[min] = weight;
-					bestNetworks[min] = networks;
+					bestNetworks[min] = db.get(network);
 				}
 
 			}
