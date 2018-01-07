@@ -1,15 +1,16 @@
+/jaxb-api-2.1.jar
+/jaxb-impl-2.1.17.jar
+/jsr173_api-1.0.jar
 /AP.class
 /APNetworks.class
+/AndFilter.class
 /EstimateAlgo.class
 /EstimateLoc.class
 /ExportCSV.class
 /ExportKML.class
 /Filter.class
 /Haversine.class
-<<<<<<< HEAD
 /org/
-=======
->>>>>>> branch 'master' of https://github.com/neorus616/OOP.git
 /IDFilter.class
 /ImportCSV.class
 /ImportCombinedCSV.class
@@ -21,13 +22,15 @@
 /MainMenuGui$10.class
 /MainMenuGui$11.class
 /MainMenuGui$12.class
-<<<<<<< HEAD
 /MainMenuGui$13.class
-=======
->>>>>>> branch 'master' of https://github.com/neorus616/OOP.git
+/MainMenuGui$14.class
+/MainMenuGui$15.class
+/MainMenuGui$16.class
+/MainMenuGui$17.class
 /MainMenuGui$2.class
 /MainMenuGui$3.class
 /MainMenuGui$4.class
+/MainMenuGui$5$1.class
 /MainMenuGui$5.class
 /MainMenuGui$6.class
 /MainMenuGui$7$1.class
@@ -36,36 +39,11 @@
 /MainMenuGui$8.class
 /MainMenuGui$9.class
 /MainMenuGui.class
-/jaxb-api-2.1.jar
-/jaxb-impl-2.1.17.jar
-/jsr173_api-1.0.jar
-/org/
 /Networks.class
 /NetworksTest.class
-/TestFrame$1.class
-/TestFrame$2$1.class
-/TestFrame$2.class
-/TestFrame$3$1.class
-/TestFrame$3.class
-/TestFrame.class
-/ThreadA.class
-/ThreadB.class
+/OrFilter.class
 /TimeFilter.class
 /Wifi.class
-<<<<<<< HEAD
 /history.class
 /staticElements.class
 /watcher.class
-/MainMenuGui$14.class
-=======
-/staticElements.class
-/watcher.class
->>>>>>> branch 'master' of https://github.com/neorus616/OOP.git
-/AndFilter.class
-/OrFilter.class
-/MainMenuGui$15.class
-/MainMenuGui$16.class
-/MainMenuGui$5$1.class
-/MainMenuGui$17.class
-/MainMenuGui$18.class
-/MainMenuGui$SwingAction.class

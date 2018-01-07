@@ -41,28 +41,33 @@ public class EstimateLoc {
 						strongPoints.put(network.getPoints().get(0).getMAC(), network);
 					}
 					else strongPoints.get(network.getPoints().get(0).getMAC()).add(ssid, mac, (int)signal, channel, lat, lon, alt);
-				}	
+				}
 			}
-			Set<String> keys = strongPoints.keySet();
-			Iterator<String> itr = keys.iterator();
-			String str = "";
-			double [] loc;
-			Hashtable <String, Networks> locAP = new Hashtable<String, Networks>();
-			while (itr.hasNext()) {
-				str = itr.next();
-				loc = EstimateAlgo.wcenter(strongPoints.get(str).getPoints());
-				strongPoints.get(str).setLat(loc[0]);
-				strongPoints.get(str).setLon(loc[1]);
-				strongPoints.get(str).setAlt(loc[2]);
-				Networks locAPs = new Networks(strongPoints.get(str).getID(),strongPoints.get(str).getTime(),loc[0],loc[1],loc[2]);
-				locAPs.add(strongPoints.get(str).getPoints().get(0).getSSID(), str, strongPoints.get(str).getPoints().get(strongPoints.get(str).maxSignal()).getSignal(), strongPoints.get(str).getPoints().get(0).getChannel());
-				locAP.put(str, locAPs);
-			}
+			Hashtable<String, Networks> locAP = apToNetworks(strongPoints);
 			ExportCSV.writeCsvFile(locAP, savePath, 2);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static Hashtable<String, Networks> apToNetworks(Hashtable<String, APNetworks> strongPoints) {
+		Set<String> keys = strongPoints.keySet();
+		Iterator<String> itr = keys.iterator();
+		String str = "";
+		double [] loc;
+		Hashtable <String, Networks> locAP = new Hashtable<String, Networks>();
+		while (itr.hasNext()) {
+			str = itr.next();
+			loc = EstimateAlgo.wcenter(strongPoints.get(str).getPoints());
+			strongPoints.get(str).setLat(loc[0]);
+			strongPoints.get(str).setLon(loc[1]);
+			strongPoints.get(str).setAlt(loc[2]);
+			Networks locAPs = new Networks(strongPoints.get(str).getID(),strongPoints.get(str).getTime(),loc[0],loc[1],loc[2]);
+			locAPs.add(strongPoints.get(str).getPoints().get(0).getSSID(), str, strongPoints.get(str).getPoints().get(strongPoints.get(str).maxSignal()).getSignal(), strongPoints.get(str).getPoints().get(0).getChannel());
+			locAP.put(str, locAPs);
+		}
+		return locAP;
 	}
 
 	public static void userEstimateLoc(String db, String wifiscans, String filename, int k) {

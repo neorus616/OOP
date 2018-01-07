@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.awt.event.ActionEvent;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
@@ -488,6 +489,7 @@ public class MainMenuGui {
 	                    null, null,
 	                    "a4:2b:b0:ad:2d:34");
 				System.out.println(s);
+				System.out.println(Arrays.toString(a.findAPloc(s)));
 			}
 		});
 		
