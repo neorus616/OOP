@@ -74,7 +74,7 @@ public class history {
 			double lon = strongPoints.get(key).getLon();
 			double alt = strongPoints.get(key).getAlt();
 			String id = strongPoints.get(key).getID();
-			for (int i = 1; i <= strongPoints.get(key).getPoints().size(); i++) {
+			for (int i = 0; i < strongPoints.get(key).getPoints().size(); i++) {
 				String mac = strongPoints.get(key).getPoints().get(i).getMAC();
 				String ssid = strongPoints.get(key).getPoints().get(i).getSSID();
 				int channel = strongPoints.get(key).getPoints().get(i).getChannel();
@@ -82,14 +82,19 @@ public class history {
 				if(mac.equals(macSample))
 					isSample = true;
 				if(isSample) {
-					network = new APNetworks(id, time);
+					network = new APNetworks("", "");
 					network.add(ssid, mac, (int)signal, channel, lat, lon, alt);
-					samples.put(network.getPoints().get(0).getMAC(), network);
+					if(!samples.containsKey(network.getPoints().get(0).getMAC())) {
+						samples.put(network.getPoints().get(0).getMAC(), network);
+					}
+					else 
+						samples.get(network.getPoints().get(0).getMAC()).add(ssid, mac, (int)signal, channel, lat, lon, alt);
 					isSample = false;
 					break;
 				}
 			}
 		}
+		System.out.println(samples);
 		Hashtable<String, Networks> macLoc = EstimateLoc.apToNetworks(samples);
 		loc[0] = macLoc.get(macSample).getLat();
 		loc[1] = macLoc.get(macSample).getLon();
