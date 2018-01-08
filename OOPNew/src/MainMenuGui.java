@@ -477,22 +477,35 @@ public class MainMenuGui {
 		frame.getContentPane().add(txtpnStartDate, "cell 0 3 3 1");
 		frame.getContentPane().add(txtpnMaxalt, "cell 2 5 2 1");
 		frame.getContentPane().add(txtpnMaxlon, "cell 4 5 4 1");
-		
+
 		JButton btnFindApLocationalgo = new JButton("Find AP Location(Algo 1)");
 		btnFindApLocationalgo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String s = (String)JOptionPane.showInputDialog(
-	                    frame,
-	                    "Enter MAC Address to find AP location:\n",
-	                    "Algo 1",
-	                    JOptionPane.PLAIN_MESSAGE,
-	                    null, null,
-	                    "a4:2b:b0:ad:2d:34");
-				System.out.println(s);
-				System.out.println(Arrays.toString(a.findAPloc(s)));
+						frame,
+						"Enter MAC Address to find AP location:\n",
+						"Algo 1",
+						JOptionPane.PLAIN_MESSAGE,
+						null, null,
+						"a4:2b:b0:ad:2d:34");
+				if(s!=null) {
+					double [] loc = a.findAPloc(s);
+					if(loc[0] == 0.0 && loc[1] == 0.0 && loc[2] == 0.0) {
+						JOptionPane.showMessageDialog((Component)e.getSource(),
+								"Couldn't find location",
+								"AP Finder",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog((Component)e.getSource(),
+								Arrays.toString(loc),
+								"AP Finder",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+
 			}
 		});
-		
+
 		btnFindApLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
 		frame.getContentPane().add(btnFindApLocationalgo, "cell 15 5 1 2,grow");
 		frame.getContentPane().add(txtpnAlt, "cell 2 6 2 1");

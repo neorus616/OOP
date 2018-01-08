@@ -75,14 +75,14 @@ public class history {
 			double alt = strongPoints.get(key).getAlt();
 			String id = strongPoints.get(key).getID();
 			for (int i = 0; i < strongPoints.get(key).getPoints().size(); i++) {
-				String mac = strongPoints.get(key).getPoints().get(i).getMAC();
+				String mac = this.strongPoints.get(key).getPoints().get(i).getMAC();
 				String ssid = strongPoints.get(key).getPoints().get(i).getSSID();
 				int channel = strongPoints.get(key).getPoints().get(i).getChannel();
 				double signal = strongPoints.get(key).getPoints().get(i).getSignal();
 				if(mac.equals(macSample))
 					isSample = true;
 				if(isSample) {
-					network = new APNetworks("", "");
+					network = new APNetworks(id, time);
 					network.add(ssid, mac, (int)signal, channel, lat, lon, alt);
 					if(!samples.containsKey(network.getPoints().get(0).getMAC())) {
 						samples.put(network.getPoints().get(0).getMAC(), network);
@@ -94,11 +94,43 @@ public class history {
 				}
 			}
 		}
-		System.out.println(samples);
 		Hashtable<String, Networks> macLoc = EstimateLoc.apToNetworks(samples);
-		loc[0] = macLoc.get(macSample).getLat();
-		loc[1] = macLoc.get(macSample).getLon();
-		loc[2] = macLoc.get(macSample).getAlt();
+		if(!macLoc.isEmpty()) {
+			loc[0] = macLoc.get(macSample).getLat();
+			loc[1] = macLoc.get(macSample).getLon();
+			loc[2] = macLoc.get(macSample).getAlt();
+		}
 		return loc;
 	}
+
+	public double[] findUserloc(String [] macSample) {
+		String time = macSample[0];
+		String id = macSample[1];
+		Hashtable<String, Networks> goodSamples = new Hashtable<>();
+		Networks wifiScan = new Networks(time,id,0,0,0);
+		for (int i = 6; i < macSample.length; i=i+4) {
+			String ssid = macSample[i];
+			String mac = macSample[i+1];
+			int channel = Integer.parseInt(macSample[i+2]);
+			double signal = Double.parseDouble(macSample[i+3]);
+			wifiScan.add(ssid, mac, (int)signal, channel);
+		}
+		for (String key : strongPoints.keySet()) {
+			boolean isSample = false;
+			for (int i = 0; i < macSample.length; i++) {
+				for (int j = 0; j < wifiScan.getPoints().size(); j++) {
+					if(strongPoints.get(key).getPoints().get(i).getMAC().equals(wifiScan.getPoints().get(j).getMAC())) {
+						isSample = true;
+					}
+				}
+			}
+			if(isSample) {
+				//System.out.println(network);
+				goodSamples.put(time+id, strongPoints.get(key));
+			}
+		}
+		double[] loc = EstimateLoc.searchPi2(wifiScan, 10, goodSamples);
+		return loc;
+	}
+
 }

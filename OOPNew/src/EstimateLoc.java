@@ -88,7 +88,7 @@ public class EstimateLoc {
 					int signal = Integer.parseInt(record.get("Signal" + i));
 					network.add(ssid, mac, signal, channel);
 				}
-				double [] loc = searchPi(db, network, k);
+				double [] loc = macFiltering(db, network, k);
 				network.setLat(loc[0]);
 				network.setLon(loc[1]);
 				network.setAlt(loc[2]);
@@ -102,13 +102,17 @@ public class EstimateLoc {
 	}
 
 
-	private static double[] searchPi(String filename, Networks userNetwork , int k) {
+	private static double[] macFiltering(String filename, Networks userNetwork , int k) {
+		Hashtable<String, Networks> db = MacFilter.test(filename, userNetwork);
+		return searchPi2(userNetwork, k, db);
+	}
+
+	public static double[] searchPi2(Networks userNetwork, int k, Hashtable<String, Networks> db) {
 		Networks[] bestNetworks = new Networks[k];
 		double[] bestPi = new double[k];
 		double weight = 1;
 		int c = 0;
 		boolean isMatch = false;
-		Hashtable<String, Networks> db = MacFilter.test(filename, userNetwork);
 		for (String network : db.keySet()) {
 			for (int i = 0; i < userNetwork.getPoints().size(); i++) {
 				for (int j = 0; j < db.get(network).getPoints().size(); j++) {
@@ -147,7 +151,6 @@ public class EstimateLoc {
 		}
 
 		return EstimateAlgo.wcenter(bestNetworks, bestPi, c);
-
 	}
 
 	private static double difference(Wifi a, Wifi b) {

@@ -1,6 +1,8 @@
+/history.java
 /jaxb-api-2.1.jar
 /jaxb-impl-2.1.17.jar
 /jsr173_api-1.0.jar
+/org/
 /AP.class
 /APNetworks.class
 /AndFilter.class
@@ -10,7 +12,6 @@
 /ExportKML.class
 /Filter.class
 /Haversine.class
-/org/
 /IDFilter.class
 /ImportCSV.class
 /ImportCombinedCSV.class
