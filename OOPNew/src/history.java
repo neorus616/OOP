@@ -115,9 +115,10 @@ public class history {
 			double signal = Double.parseDouble(macSample[i+3]);
 			wifiScan.add(ssid, mac, (int)signal, channel);
 		}
+		
 		for (String key : strongPoints.keySet()) {
 			boolean isSample = false;
-			for (int i = 0; i < macSample.length; i++) {
+			for (int i = 0; i < strongPoints.get(key).getPoints().size(); i++) {
 				for (int j = 0; j < wifiScan.getPoints().size(); j++) {
 					if(strongPoints.get(key).getPoints().get(i).getMAC().equals(wifiScan.getPoints().get(j).getMAC())) {
 						isSample = true;
@@ -126,10 +127,10 @@ public class history {
 			}
 			if(isSample) {
 				//System.out.println(network);
-				goodSamples.put(time+id, strongPoints.get(key));
+				goodSamples.put(key, strongPoints.get(key));
 			}
 		}
-		double[] loc = EstimateLoc.searchPi2(wifiScan, 10, goodSamples);
+		double[] loc = EstimateLoc.searchPi2(wifiScan, 3, goodSamples);
 		return loc;
 	}
 

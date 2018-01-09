@@ -506,8 +506,38 @@ public class MainMenuGui {
 			}
 		});
 
+		JButton btnFindUserLocationalgo = new JButton("Find User Location(Algo 2)");
+		btnFindUserLocationalgo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s = (String)JOptionPane.showInputDialog(
+						frame,
+						"Enter noGPS line to find user location:\n",
+						"Algo 2",
+						JOptionPane.PLAIN_MESSAGE,
+						null, null,
+						"2017-12-01 10:43:46,Lenovo PB2-690Y,0,0,0.0,2,HOTBOX1234,30:b5:c2:6e:12:d4,1,-88,Eldad_2EX,80:1f:02:e8:b9:cc,11,-81");
+				if(s!=null) {
+					double [] loc = a.findUserloc(s.split(","));
+					if(loc[0] == 0.0 && loc[1] == 0.0 && loc[2] == 0.0) {
+						JOptionPane.showMessageDialog((Component)e.getSource(),
+								"Couldn't find location",
+								"User Finder",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog((Component)e.getSource(),
+								Arrays.toString(loc),
+								"User Finder",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+				System.out.println();
+			}
+		});
+		
 		btnFindApLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
+		btnFindUserLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
 		frame.getContentPane().add(btnFindApLocationalgo, "cell 15 5 1 2,grow");
+		frame.getContentPane().add(btnFindUserLocationalgo, "cell 15 9 1 2,grow");
 		frame.getContentPane().add(txtpnAlt, "cell 2 6 2 1");
 		frame.getContentPane().add(txtpnLat, "cell 0 6 2 1");
 		frame.getContentPane().add(txtpnMaxlat, "cell 0 5 2 1");
