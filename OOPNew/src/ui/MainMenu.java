@@ -9,6 +9,7 @@ package ui;
 
 import java.util.Hashtable;
 
+import Algorithms.EstimateLoc;
 import io.ExportCSV;
 import io.ExportKML;
 import io.ImportCSV;
@@ -20,11 +21,11 @@ public class MainMenu {
 	public static void main(String[] args){
 		// TODO Auto-generated method stub
 		
-		//readAndWriteComb("DBwifiscans/","DBwifiscans/VeryUpgradedCSV.csv");
-		//readAndWriteKML("CSV/VeryUpgradedCSV.csv", "date = 2017-10-27 16:27:03,2017-10-27 16:37:03", "CSV/VeryUpgradedKML.kml");
+		//readAndWriteComb("TestCSVFilesForAssigment1/","TestCSVFilesForAssigment1/VeryUpgradedCSV.csv");
+		//readAndWriteKML("TestCSVFilesForAssigment1/VeryUpgradedCSV.csv", "id = SHIELD Tablet", "TestCSVFilesForAssigment1/VeryUpgradedKML.kml");
 	
-		//EstimateLoc.apEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\MYAlgo1_BM2_4.csv", 4);
-		//EstimateLoc.userEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\_comb_no-GPS_TS2.csv" ,"CSVLoc\\MYAlgo2_BM2_4.csv", 4);
+		//EstimateLoc.apEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/MYAlgo1_BM2_4.csv", 4);
+		//EstimateLoc.userEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/_comb_no-GPS_TS2.csv" ,"TestCSVFilesForAssigment2//MYAlgo2_BM2_4.csv", 4);
 
 	}
 	

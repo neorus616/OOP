@@ -48,10 +48,11 @@ public class ImportCombinedCSV {
 						String mac = record.get("MAC" + i);
 						String ssid = record.get("SSID" + i);
 						int channel = Integer.parseInt(record.get("Frequncy" + i));
-						int signal = Integer.parseInt(record.get("Signal" + i));
+						double signal = Double.parseDouble(record.get("Signal" + i));
 						network = new Networks(id, time, lat, lon, alt);
-						network.add(ssid, mac, signal, channel);
-						if(!filter.equals("") && filter1.test(network)) {
+						network.add(ssid, mac, (int)signal, channel);
+						
+						if(filter1 != null && filter1.test(network)) {
 							if(!strongPoints.containsKey(network.getPoints().get(0).getMAC())) {
 								strongPoints.put(network.getPoints().get(0).getMAC(), network);
 							}
@@ -60,13 +61,14 @@ public class ImportCombinedCSV {
 								strongPoints.put(network.getPoints().get(0).getMAC(), network);
 							}	
 						}
-						else {
+						else if(filter.equals("")){
+							
 							for (int k = i+1; k <= Integer.parseInt(record.get("#WIFI Networks")); k++) {
 								mac = record.get("MAC" + k);
 								ssid = record.get("SSID" + k);
 								channel = Integer.parseInt(record.get("Frequncy" + k));
-								signal = Integer.parseInt(record.get("Signal" + k));
-								network.add(ssid, mac, signal, channel);
+								signal = Double.parseDouble(record.get("Signal" + k));
+								network.add(ssid, mac, (int)signal, channel);
 							}
 							if(!strongPoints.containsKey(time+id)) {
 								strongPoints.put((time+id), network);
@@ -116,11 +118,14 @@ public class ImportCombinedCSV {
 	 */
 	public static Filter filter(String filter, boolean not) {
 		int k = filter.lastIndexOf('=');
-		if(filter.contains("ID")) //ID = lenovo
+		if(filter.contains("ID") || filter.contains("id") || filter.contains("Id")) //ID = lenovo
 			return new IDFilter(filter.substring(k+1).trim(), !not);
-		if(filter.contains("Location")) //Location = 100,200,150,200,30,60
-			return new LocationFilter(filter.substring(k+1).trim().split(","), !not);
-		if(filter.contains("Date")) //Date = 2017-10-27 16:27:03,2017-10-27 16:37:03
+		if(filter.contains("Location") || filter.contains("location")) { 
+			if(filter.substring(k+1).trim().split(",").length == 6)  //Location = 100,200,150,200,30,60
+			return new LocationFilter(filter.substring(k+1).trim().split(","), !not); //Location = 32.16876665,34.81320794,100
+			else return new LocationFilter(filter.substring(k+1).trim().split(",")[0],filter.substring(k+1).trim().split(",")[1],filter.substring(k+1).trim().split(",")[2]);
+		}
+		if(filter.contains("Date") || filter.contains("date")) //Date = 2017-10-27 16:27:03,2017-10-27 16:37:03
 			return new TimeFilter(filter.substring(k+1).trim().split(","), !not);
 		return null;
 	}
