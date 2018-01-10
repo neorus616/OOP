@@ -23,7 +23,7 @@ To use the first algorithm to find approx location of AP, use the function Estim
 To use the second alghoritm to find approx location of user, use the function EstimateLoc.userEstimateLoc with the parameters "Database path", "user scan without gps", "save path", and an int(how much similar lines of AP points to check), for example EstimateLoc.userEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/_comb_no-GPS_TS2.csv" ,"TestCSVFilesForAssigment2//MYAlgo2_BM2_4.csv", 4).<br>
 
 ## Gui Instructions:
-![My image](OOP/OOPNew/GUI Instructions.png)
+![My image](https://raw.githubusercontent.com/neorus616/OOP/master/OOPNew/GUI%20Instructions.png)
 
 
 
