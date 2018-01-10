@@ -13,14 +13,17 @@ To create a combined CSV file, use the function readAndWriteComb(in MainMenu cla
 The combined file will be located in the "Save Path" folder with the name VeryUpgradedCSV.csv(as stated in parameters).<br>
 
 To create a KML file, use the function readAndWriteKML(in MainMenu class) with the parameters "Folder path" ,  "filter" and "Save path", the function can filter the given CSV file by **ID**, **date** and **location**. <br>
-:iphone:**ID:** to filter all the AP that have been scanned from the phone "ONEPLUS A3003" for example, run the function ImportCombinedCSV.filterCSV("C:\CSV\CombCSV.csv", "ID = ONEPLUS A3003"). <br>
+:iphone:**ID:** to filter all the AP that have been scanned from the phone "ONEPLUS A3003" for example, run the function readAndWriteKML("TestCSVFilesForAssigment1/VeryUpgradedCSV.csv", "id = ONEPLUS A3003", "TestCSVFilesForAssigment1/VeryUpgradedKML.kml"). <br>
 :clock1130::date:**Date:** to filter all the AP that have been scanned from 2017-10-27 16:27:03 until 2017-10-27 16:37:03 for example, run the function readAndWriteKML("TestCSVFilesForAssigment1/VeryUpgradedCSV.csv", "date = 2017-10-27 16:27:03,2017-10-27 16:37:03", "TestCSVFilesForAssigment1/VeryUpgradedKML.kml"). <br>
-:globe_with_meridians:**location:** to filter all the AP that have been scanned around 32.16876665,34.81320794 within radius of 100 meters for example, run the function ImportCombinedCSV.filterCSV("C:\CSV\CombCSV.csv", "location = 32.16876665,34.81320794,100"). <br>
+:globe_with_meridians:**location:** to filter all the AP that have been scanned around 32.16876665,34.81320794 within radius of 100 meters for example, run the function readAndWriteKML("TestCSVFilesForAssigment1/VeryUpgradedCSV.csv", "location = 32.16876665,34.81320794,100", "TestCSVFilesForAssigment1/VeryUpgradedKML.kml"). <br>
 If you get an exception then maybe you run it with incorrect parameters. (:trollface:) <br>
-The KML file is located in the source folder where the Combined CSV file, you can run it on [Google Earth website](https://earth.google.com/web/) via Chrome(or their software to see also the timeline). <br>
+You can see the KML file on [Google Earth website](https://earth.google.com/web/) via Chrome(or their software to see also the timeline). <br>
 
-To use the first alghoritm to find approx location of AP, use the function EstimateLoc.apEstimateLoc with the parameters "Database path", "save path" and an int(how much similar AP points to check), for example EstimateLoc.apEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\MYAlgo1_BM2_4.csv", 4).<br>
-To use the second alghoritm to find approx location of user, use the function EstimateLoc.userEstimateLoc with the parameters "Database path", "user scan without gps", "save path", and an int(how much similar lines of AP points to check), for example EstimateLoc.userEstimateLoc("CSVLoc\\testing\\_comb_all_BM2_.csv","CSVLoc\\testing\\_comb_no-GPS_TS2.csv" ,"CSVLoc\\MYAlgo2_BM2_4.csv", 4).<br>
+To use the first algorithm to find approx location of AP, use the function EstimateLoc.apEstimateLoc with the parameters "Database path", "save path" and an int(how much similar AP points to check), for example EstimateLoc.apEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/MYAlgo1_BM2_4.csv", 4).<br>
+To use the second alghoritm to find approx location of user, use the function EstimateLoc.userEstimateLoc with the parameters "Database path", "user scan without gps", "save path", and an int(how much similar lines of AP points to check), for example EstimateLoc.userEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/_comb_no-GPS_TS2.csv" ,"TestCSVFilesForAssigment2//MYAlgo2_BM2_4.csv", 4).<br>
+
+## Gui Instructions:
+![My image](OOP/OOPNew/GUI Instructions.png)
 
 
 
