@@ -1,20 +1,31 @@
+/**
+ * 
+ * @author Kostia Kazakov &amp; Yogev Rahamim <br>
+ * @version 2.0
+ * <b>Description:</b> <br>
+ * Calculate location of AP or user based on Algorithm 1 or 2.
+ */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 public class EstimateLoc {
 
-
 	final static int NORM = 10000, POWER = 2, MIN_DIFF = 3, DIFF_NO_SIG = 100;
 	final static double  SIG_DIFF = 0.4;
 
+	/**
+	 * Search each MAC address in our database it location and save in savePath
+	 * @param db - database
+	 * @param savePath - save path
+	 * @param k - how many "best" networks
+	 */
 	public static void apEstimateLoc(String db, String savePath, int k) {
 		try {
 			Hashtable<String, APNetworks> strongPoints = new Hashtable<>();
@@ -51,6 +62,11 @@ public class EstimateLoc {
 		}
 	}
 
+	/**
+	 * convert from AP to Network object
+	 * @param strongPoints - similar MAC Addresses
+	 * @return database in type of Networks
+	 */
 	public static Hashtable<String, Networks> apToNetworks(Hashtable<String, APNetworks> strongPoints) {
 		Set<String> keys = strongPoints.keySet();
 		Iterator<String> itr = keys.iterator();
@@ -70,6 +86,13 @@ public class EstimateLoc {
 		return locAP;
 	}
 
+	/**
+	 * Calculate user location from wifiscan in format of CSVCombined and save it in filename.
+	 * @param db - database
+	 * @param wifiscans - user scans
+	 * @param filename - savepath
+	 * @param k - how many "best" samples
+	 */
 	public static void userEstimateLoc(String db, String wifiscans, String filename, int k) {
 		try {
 			FileReader fr = new FileReader(wifiscans);
@@ -101,13 +124,26 @@ public class EstimateLoc {
 		}
 	}
 
-
+	/**
+	 * create filtered database by mac's and send it to our Alghoritm to calculate it locations
+	 * @param filename - save location
+	 * @param userNetwork - user scans in Network object
+	 * @param k - how many "best" samples
+	 * @return location of AP.
+	 */
 	private static double[] macFiltering(String filename, Networks userNetwork , int k) {
 		Hashtable<String, Networks> db = MacFilter.test(filename, userNetwork);
-		return searchPi2(userNetwork, k, db);
+		return searchPi(userNetwork, k, db);
 	}
 
-	public static double[] searchPi2(Networks userNetwork, int k, Hashtable<String, Networks> db) {
+	/**
+	 * calculate PI to each scan
+	 * @param userNetwork - user scans in Network object type
+	 * @param k - how many "best" samples
+	 * @param db - Database
+	 * @return - Array of weighted Latitude, Longitude and Altitude.
+	 */
+	public static double[] searchPi(Networks userNetwork, int k, Hashtable<String, Networks> db) {
 		Networks[] bestNetworks = new Networks[k];
 		double[] bestPi = new double[k];
 		double weight = 1;
@@ -132,7 +168,6 @@ public class EstimateLoc {
 							Math.pow(userNetwork.getPoints().get(i).getSignal(), POWER));
 				}
 				isMatch = false;
-
 			}
 			if(c < k) {
 				bestPi[c] = weight;
@@ -145,18 +180,27 @@ public class EstimateLoc {
 					bestPi[min] = weight;
 					bestNetworks[min] = db.get(network);
 				}
-
 			}
 			weight = 1;
 		}
-
 		return EstimateAlgo.wcenter(bestNetworks, bestPi, c);
 	}
 
+	/**
+	 * Calculate difference between two scans signals
+	 * @param a - wifi scan
+	 * @param b - wifi scan
+	 * @return difference of two scans signals
+	 */
 	private static double difference(Wifi a, Wifi b) {
 		return Math.abs(b.getSignal() - a.getSignal()) + MIN_DIFF ;
 	}
 
+	/**
+	 * search the minimum scan\PI
+	 * @param arr - best scans\PI
+	 * @return minimum scan
+	 */
 	private static int min(double[] arr) {
 		int min = 0;
 		for (int i = 1; i < arr.length; i++) {

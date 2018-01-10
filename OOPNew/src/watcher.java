@@ -1,37 +1,47 @@
+/**
+ * 
+ * @author Kostia Kazakov &amp; Yogev Rahamim <br>
+ * @version 2.0
+ */
+
 import java.io.File;
-import java.util.Hashtable;
 
 public class watcher extends Thread {
 
-	File _f;
-	long _modified;
-	long _size;
-	history _a;
+	File _folder;
+	long _lastModified;
+	history _database;
 
-
-	public watcher(String path, history a) {
-		this._f = new File(path);
-		this._modified = _f.lastModified();
-		this._a = a;
-		this._a.updateHistory(a.getPoints());
-		this._size = _f.length();
+	/**
+	 * Constructor
+	 * @param path - Directory path to CSV files
+	 * @param database - Object that hold Database's
+	 */
+	public watcher(String path, history database) {
+		_folder = new File(path);
+		_lastModified = _folder.lastModified();
+		_database = database;
+		_database.updateHistory(database.getPoints());
 	}
 
+	/**
+	 * update current database and watch for changed in path directory.
+	 */
 	@Override
 	public void run() {
-		this._a.updateHistory(ImportCSV.mergeHash(this._a.getPoints(), ImportCSV.validPath(this._f.getAbsolutePath()+"\\")));
-		System.out.println(this._a.getPoints().size());
+		_database.updateHistory(ImportCSV.mergeHash(_database.getPoints(), ImportCSV.validPath(_folder.getAbsolutePath()+"\\")));
+		System.out.println(_database.getPoints().size());
 		while(true) {
-			if(this._modified != this._f.lastModified()) {
+			if(_lastModified != _folder.lastModified()) {
 				System.out.println("changed");
-				this._modified = this._f.lastModified();
+				_lastModified = _folder.lastModified();
 				try {
 					sleep(500);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				this._a.updateHistory(ImportCSV.validPath(this._f.getAbsolutePath()+"\\"));
+				_database.updateHistory(ImportCSV.validPath(_folder.getAbsolutePath()+"\\"));
 			}
 		}
 	}

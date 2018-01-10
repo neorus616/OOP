@@ -1,26 +1,45 @@
+/**
+ * 
+ * @author Kostia Kazakov &amp; Yogev Rahamim <br>
+ * @version 2.0 
+ * Description:
+ * Time Filter.
+ */
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
 public class TimeFilter implements Filter {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 546L;
 	private String _start, _end;
 	private boolean _not = true;
 
+	/**
+	 * Constructor
+	 * @param start - Start time
+	 * @param end - End time
+	 */
 	public TimeFilter(String start, String end) {
 		_start = start;
 		_end = end;
 	}
 	
+	/**
+	 * Constructor
+	 * @param time - array of start and end time
+	 */
 	public TimeFilter(String [] time) {
 		_start = time[0];
 		_end = time[1];
 	}
 	
+	/**
+	 * Constructor for not operator
+	 * @param time - array of start and end time
+	 * @param not - not operator
+	 */
 	public TimeFilter(String [] time, boolean not) {
 		_start = time[0];
 		_end = time[1];

@@ -1,9 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.function.Predicate;  
 
 /**
  * 
@@ -21,11 +18,13 @@ public class Networks {
 	private ArrayList<Wifi> _points = new ArrayList<Wifi>();
 	private int _numAP = 10;
 
-	//Empty constructor
+	/**
+	 * Empty constructor
+	 */
 	public Networks() {}
 
 	/**
-	 * 
+	 * Constructor
 	 * @param id - Phone.
 	 * @param time - Time "yyyy-MM-dd HH:mm:ss".
 	 * @param lat - Latitude.
@@ -69,7 +68,10 @@ public class Networks {
 		else _points.add(p);
 	}
 
-
+	/**
+	 * set size of arraylist
+	 * @param numAP - size of arraylist
+	 */
 	public void setNumAP(int numAP) {
 		this._numAP = numAP;
 	}
@@ -98,6 +100,10 @@ public class Networks {
 		return _lat;
 	}
 
+	/**
+	 * set Object's Latitude.
+	 * @param lat - Latitude.
+	 */
 	public void setLat(double lat) {
 		this._lat = lat;
 	}
@@ -108,7 +114,11 @@ public class Networks {
 	public double getLon() {
 		return _lon;
 	}
-
+	
+	/**
+	 * set Object's Longitude.
+	 * @param lon - Longitude.
+	 */
 	public void setLon(double lon) {
 		this._lon = lon;
 	}
@@ -121,6 +131,10 @@ public class Networks {
 		return _alt;
 	}
 
+	/**
+	 * set Object's Altitude.
+	 * @param alt - Altitude.
+	 */
 	public void setAlt(double alt) {
 		this._alt = alt;
 	}
@@ -201,6 +215,11 @@ public class Networks {
 		return false;
 	}
 
+	/**
+	 * test filter using interface
+	 * @param f - filter to test by
+	 * @return true if pass the test, false otherwise
+	 */
 	public boolean filter(Filter f){
 		return f.test(this);
 	}

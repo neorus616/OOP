@@ -1,12 +1,11 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * 
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>
  * @version 2.0
  * <b>Description:</b> <br>
- * 
+ * Calculate location of AP or user based on Algorithm 1 or 2.
  */
 public class EstimateAlgo {
 	
@@ -17,7 +16,6 @@ public class EstimateAlgo {
 	 */
 	public static double[] wcenter(ArrayList<AP> points){
 		double wlat = 0, wlon = 0 ,walt = 0, weight = 0;
-
 		for (AP point : points) {
 			wlat += (point.getLat())/(Math.pow(point.getSignal(), 2));
 			wlon += (point.getLon())/(Math.pow(point.getSignal(), 2));
@@ -28,10 +26,16 @@ public class EstimateAlgo {
 		wcenter[0] = wlat/weight;
 		wcenter[1] = wlon/weight;
 		wcenter[2] = walt/weight;
-		
 		return wcenter;
 	}
 	
+	/**
+	 *
+	 * @param network - best networks
+	 * @param pi - best PI
+	 * @param k - how many "best" networks
+	 * @return Array of weighted Latitude, Longitude and Altitude.
+	 */
 	public static double[] wcenter(Networks[] network, double[] pi, int k){
 		double wlat = 0, wlon = 0 ,walt = 0, weight = 0;
 		for (int i = 0; i < k; i++) {
@@ -44,7 +48,6 @@ public class EstimateAlgo {
 		wcenter[0] = wlat/weight;
 		wcenter[1] = wlon/weight;
 		wcenter[2] = walt/weight;
-		
 		return wcenter;
 	}	
 }

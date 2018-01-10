@@ -1,13 +1,26 @@
+/**
+ * 
+ * @author Kostia Kazakov &amp; Yogev Rahamim <br>
+ * @version 2.0 
+ * Description:
+ * Location filter.
+ */
 
 public class LocationFilter implements Filter {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 456L;
 	private double _maxAlt, _minAlt, _maxLon, _minLon, _maxLat, _minLat;
 	private boolean _not = true;
 	
+	/**
+	 * Constructor
+	 * @param minLat - Minimum Latitude
+	 * @param maxLat - Maximum Latitude
+	 * @param minLon - Minimum Longitude
+	 * @param maxLon - Maximum Longitude
+	 * @param minAlt - Minimum Altitude
+	 * @param maxAlt - Maximum Altitude
+	 */
 	public LocationFilter(String minLat, String maxLat, String minLon, String maxLon, String minAlt, String maxAlt) {
 		_maxAlt = Double.parseDouble(maxAlt);
 		_minAlt = Double.parseDouble(minAlt);
@@ -17,6 +30,10 @@ public class LocationFilter implements Filter {
 		_minLat = Double.parseDouble(minLat);
 	}
 	
+	/**
+	 * Constructor
+	 * @param loc - Array of location
+	 */
 	public LocationFilter(String [] loc) {
 		_minLat = Double.parseDouble(loc[0]);
 		_maxLat = Double.parseDouble(loc[1]);
@@ -26,6 +43,11 @@ public class LocationFilter implements Filter {
 		_maxAlt = Double.parseDouble(loc[5]);
 	}
 	
+	/**
+	 * Constructor for not operator
+	 * @param loc - Array of location
+	 * @param not - not operator
+	 */
 	public LocationFilter(String [] loc, boolean not) {
 		_minLat = Double.parseDouble(loc[0]);
 		_maxLat = Double.parseDouble(loc[1]);
@@ -36,19 +58,16 @@ public class LocationFilter implements Filter {
 		_not = not;
 	}
 	
-	
-	
-	
 	@Override
 	public boolean test(Networks p) {
 		// TODO Auto-generated method stub
 		if(_not)
-		return this._maxAlt >= p.getAlt() && this._minAlt <= p.getAlt() &&
-				this._maxLon >= p.getLon() && this._minLon <= p.getLon() &&
-				this._maxLat >= p.getLat() && this._minLat <= p.getLat();
-				else return !(this._maxAlt >= p.getAlt() && this._minAlt <= p.getAlt() &&
-				this._maxLon >= p.getLon() && this._minLon <= p.getLon() &&
-				this._maxLat >= p.getLat() && this._minLat <= p.getLat());
+		return _maxAlt >= p.getAlt() && _minAlt <= p.getAlt() &&
+				_maxLon >= p.getLon() && _minLon <= p.getLon() &&
+				_maxLat >= p.getLat() && _minLat <= p.getLat();
+				else return !(_maxAlt >= p.getAlt() && _minAlt <= p.getAlt() &&
+				_maxLon >= p.getLon() && _minLon <= p.getLon() &&
+				_maxLat >= p.getLat() && _minLat <= p.getLat());
 	}
 
 	@Override

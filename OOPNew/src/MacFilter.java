@@ -2,11 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -15,12 +11,12 @@ import org.apache.commons.csv.CSVRecord;
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>
  * @version 2.0  
  * <b>Description:</b> <br>
- * Temporary.
+ * Mac Filter.
  */
 public class MacFilter {
 
 	/**
-	 * 
+	 * Build database with only matched mac filter
 	 * @param path -  File path.
 	 * @param wifiScan - User current APs scan.
 	 */
@@ -53,7 +49,6 @@ public class MacFilter {
 						}
 					}
 					if(isSample) {
-						//System.out.println(network);
 						APs.put(time+id, network);
 					}
 					network = new Networks();

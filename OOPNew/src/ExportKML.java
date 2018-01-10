@@ -54,7 +54,6 @@ class ExportKML {
 							strongPoints.get(point).getTime() + "<br/><b>ID:</b> " + strongPoints.get(point).getID()).createAndSetLookAt().withLongitude(strongPoints.get(point).getLon()).withLatitude(strongPoints.get(point).getLat()).withAltitude(strongPoints.get(point).getAlt()).withRange(12000000);
 					placemark.createAndSetPoint().addToCoordinates(strongPoints.get(point).getLon(), strongPoints.get(point).getLat(), strongPoints.get(point).getAlt()); // set coordinates
 					placemark.createAndSetTimeStamp().setWhen(createtimesrap(strongPoints.get(point).getTime()) + "Z");
-				
 				}
 			}
 		}
@@ -65,8 +64,12 @@ class ExportKML {
 		}
 	}
 
-	private static String createtimesrap(String time)
-	{
+	/**
+	 * 
+	 * @param time - time
+	 * @return - time in kml format
+	 */
+	private static String createtimesrap(String time){
 		String []g=time.split(" ");
 		String a=g[0]+"T";
 		return a+g[1];

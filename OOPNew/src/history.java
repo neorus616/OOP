@@ -1,6 +1,10 @@
-import java.util.Hashtable;
+/**
+ * 
+ * @author Kostia Kazakov &amp; Yogev Rahamim <br>
+ * @version 2.0
+ */
 
-import org.apache.commons.csv.CSVRecord;
+import java.util.Hashtable;
 
 public class history {
 
@@ -8,10 +12,18 @@ public class history {
 	Hashtable<String, Networks> strongPoints = new Hashtable<>();
 	Hashtable<String, Networks> filteredStrongPoints = new Hashtable<>();
 
+	/**
+	 * Constructor
+	 * @param strongPoints - Database
+	 */
 	public history(Hashtable<String, Networks> strongPoints) {
 		this.strongPoints = strongPoints;
 	}
-
+	
+	/**
+	 * 
+	 * @return current database(if filtered is empty then all database, otherwise the filtered database).
+	 */
 	public Hashtable<String, Networks> getPoints(){
 		if(!this.filteredStrongPoints.isEmpty())
 			return this.filteredStrongPoints;
@@ -19,21 +31,36 @@ public class history {
 			return this.strongPoints;
 	}
 
+	/**
+	 * replace current database with new database.
+	 * @param strongPoints - database
+	 */
 	public void updateHistory(Hashtable<String, Networks> strongPoints) {
 		this.strongPoints = strongPoints;
 	}
 
+	/**
+	 * replace current CSVdatabase with new database and send to updateHistory.
+	 * @param strongPoints - database
+	 */
 	public void updateHistoryCSV(Hashtable<String, Networks> strongPoints) {
 		this.strongPointsCSV = strongPoints;
 		updateHistory(this.strongPointsCSV);
 	}
 
+	/**
+	 * clear all the database's.
+	 */
 	public void clear() {
 		strongPointsCSV.clear();
 		strongPoints.clear();
 		filteredStrongPoints.clear();
 	}
 
+	/**
+	 * filter the database, and put the filtered database into FilteredStrongPoints.
+	 * @param filter - filter
+	 */
 	public void filter(Filter filter) {
 		filteredStrongPoints = new Hashtable<>();
 		for (String key : this.strongPoints.keySet()) {
@@ -43,6 +70,10 @@ public class history {
 		System.out.println("Filtered " + filteredStrongPoints.size() + " Points");
 	}
 
+	/**
+	 * Calculate how many different MAC address in current database(filtered if not empty).
+	 * @return MAC count
+	 */
 	public int diffMAC() {
 		Hashtable<String, Wifi> wifiCount = new Hashtable<>();
 		if(this.filteredStrongPoints.isEmpty()) {
@@ -63,6 +94,11 @@ public class history {
 		return wifiCount.size();
 	}
 
+	/**
+	 * Search in our Database the macSample, and calculate it's location
+	 * @param macSample - MAC Address that we need to find
+	 * @return Location of the MAC Address as [Lat,Lon,Alt]
+	 */
 	public double[] findAPloc(String macSample) {
 		Hashtable<String, APNetworks> samples = new Hashtable<>();
 		boolean isSample = false;
@@ -102,35 +138,37 @@ public class history {
 		}
 		return loc;
 	}
-
-	public double[] findUserloc(String [] macSample) {
-		String time = macSample[0];
-		String id = macSample[1];
+	
+	/**
+	 * Search in our Database a scan that similar to scanSample, and calculate it's location
+	 * @param scanSample - Scan sample in a format of CSVCombined
+	 * @return Location of user as [Lat,Lon,Alt]
+	 */
+	public double[] findUserloc(String [] scanSample) {
+		String time = scanSample[0];
+		String id = scanSample[1];
 		Hashtable<String, Networks> goodSamples = new Hashtable<>();
 		Networks wifiScan = new Networks(time,id,0,0,0);
-		for (int i = 6; i < macSample.length; i=i+4) {
-			String ssid = macSample[i];
-			String mac = macSample[i+1];
-			int channel = Integer.parseInt(macSample[i+2]);
-			double signal = Double.parseDouble(macSample[i+3]);
+		for (int i = 6; i < scanSample.length; i=i+4) {
+			String ssid = scanSample[i];
+			String mac = scanSample[i+1];
+			int channel = Integer.parseInt(scanSample[i+2]);
+			double signal = Double.parseDouble(scanSample[i+3]);
 			wifiScan.add(ssid, mac, (int)signal, channel);
 		}
-		
+
 		for (String key : strongPoints.keySet()) {
 			boolean isSample = false;
 			for (int i = 0; i < strongPoints.get(key).getPoints().size(); i++) {
 				for (int j = 0; j < wifiScan.getPoints().size(); j++) {
-					if(strongPoints.get(key).getPoints().get(i).getMAC().equals(wifiScan.getPoints().get(j).getMAC())) {
+					if(strongPoints.get(key).getPoints().get(i).getMAC().equals(wifiScan.getPoints().get(j).getMAC()))
 						isSample = true;
-					}
 				}
 			}
-			if(isSample) {
-				//System.out.println(network);
+			if(isSample)
 				goodSamples.put(key, strongPoints.get(key));
-			}
 		}
-		double[] loc = EstimateLoc.searchPi2(wifiScan, 3, goodSamples);
+		double[] loc = EstimateLoc.searchPi(wifiScan, 4, goodSamples);
 		return loc;
 	}
 

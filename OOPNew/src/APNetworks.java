@@ -1,5 +1,3 @@
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +16,9 @@ public class APNetworks {
 	ArrayList<AP> _points = new ArrayList<AP>();
 	int _numAP = 10;
 	
-	//Empty constructor
+	/**
+	 * Empty constructor
+	 */
 	public APNetworks() {}
 	
 	/**
@@ -53,7 +53,7 @@ public class APNetworks {
 		public void add(String ssid, String mac, int signal, int channel, double lat, double lon, double alt){
 		AP p = new AP(ssid, mac, signal, channel, lat, lon, alt);
 		if(_points.size()==_numAP) {
-			int weak = checkSignal();
+			int weak = minSignal();
 			if(_points.get(weak).compareTo(p) == -1) {
 				_points.remove(weak);
 				_points.add(p);
@@ -62,6 +62,10 @@ public class APNetworks {
 		else _points.add(p);
 	}
 	
+	/**
+	 * set size of arraylist
+	 * @param numAP - size of arraylist
+	 */
 	public void setNumAP(int numAP) {
 		this._numAP = numAP;
 	}
@@ -90,6 +94,10 @@ public class APNetworks {
 		return _lat;
 	}
 	
+	/**
+	 * set Object's Latitude.
+	 * @param lat - Latitude.
+	 */
 	public void setLat(double lat) {
 		this._lat = lat;
 	}
@@ -101,6 +109,10 @@ public class APNetworks {
 		return _lon;
 	}
 	
+	/**
+	 * set Object's Longitude.
+	 * @param lon - Longitude.
+	 */
 	public void setLon(double lon) {
 		this._lon = lon;
 	}
@@ -113,6 +125,10 @@ public class APNetworks {
 		return _alt;
 	}
 	
+	/**
+	 * set Object's Altitude.
+	 * @param alt - Altitude.
+	 */
 	public void setAlt(double alt) {
 		this._alt = alt;
 	}
@@ -127,10 +143,10 @@ public class APNetworks {
 	}
 	
 	/**
-	 * 
+	 * search for min signal in arraylist of points
 	 * @return Index of weakest AP in Object.
 	 */
-	public int checkSignal() {
+	public int minSignal() {
 		int min = 0;
 		for (int i = 1; i < _points.size(); i++) 
 			if(_points.get(i).compareTo(_points.get(min)) == -1)
@@ -138,6 +154,10 @@ public class APNetworks {
 		return min;
 	}
 	
+	/**
+	 * search for max signal in arraylist of points
+	 * @return - Index of strongest AP in Object.
+	 */
 	public int maxSignal() {
 		int max = 0;
 		for (int i = 1; i < _points.size(); i++) 
@@ -145,5 +165,4 @@ public class APNetworks {
 				max = i;
 		return max;
 	}
-
 }

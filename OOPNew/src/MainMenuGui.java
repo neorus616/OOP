@@ -20,26 +20,15 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextArea;
-import javax.swing.JPopupMenu;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JToggleButton;
-import java.awt.Dimension;
-import java.awt.Button;
 import javax.swing.ImageIcon;
 
 public class MainMenuGui {
 
 	Hashtable<String, Networks> strongPoints;
-	watcher p;
-	boolean location = false;
-	boolean Date = false;
-	boolean id = false;
+	watcher fileWatcher;
 	boolean and = true;
 	boolean or = false;
 	String filter1 = "";
@@ -80,7 +69,7 @@ public class MainMenuGui {
 	 */
 	private void initialize() {
 		strongPoints = new Hashtable<>();
-		history a = new history(strongPoints);
+		history database = new history(strongPoints);
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frame.setBounds(100, 100, 710, 615);
@@ -88,39 +77,39 @@ public class MainMenuGui {
 
 		JTextField txtpnStartDate = new JTextField();
 		txtpnStartDate.setText("Start Date");
-		txtpnStartDate.setVisible(Date);
+		txtpnStartDate.setVisible(false);
 
 		JTextField txtpnEndDate = new JTextField();
 		txtpnEndDate.setText("End Date");
-		txtpnEndDate.setVisible(Date);
+		txtpnEndDate.setVisible(false);
 
 		JTextField txtpnLat = new JTextField();
 		txtpnLat.setText("MinLat");
-		txtpnLat.setVisible(location);
+		txtpnLat.setVisible(false);
 
 		JTextField txtpnMaxlat = new JTextField();
 		txtpnMaxlat.setText("MaxLat");
-		txtpnMaxlat.setVisible(location);
+		txtpnMaxlat.setVisible(false);
 
 		JTextField txtpnMaxlon = new JTextField();
 		txtpnMaxlon.setText("MaxLon");
-		txtpnMaxlon.setVisible(location);
+		txtpnMaxlon.setVisible(false);
 
 		JTextField txtpnMaxalt = new JTextField();
 		txtpnMaxalt.setText("MaxAlt");
-		txtpnMaxalt.setVisible(location);
+		txtpnMaxalt.setVisible(false);
 
 		JTextField txtpnAlt = new JTextField();
 		txtpnAlt.setText("MinAlt");
-		txtpnAlt.setVisible(location);
+		txtpnAlt.setVisible(false);
 
 		JTextField txtpnLon = new JTextField();
 		txtpnLon.setText("MinLon");
-		txtpnLon.setVisible(location);
+		txtpnLon.setVisible(false);
 
 		JTextField txtpnIdFilter = new JTextField();
 		txtpnIdFilter.setText("ID name");
-		txtpnIdFilter.setVisible(id);
+		txtpnIdFilter.setVisible(false);
 
 		JTextArea txtrInfo = new JTextArea();
 		txtrInfo.setEditable(false);
@@ -181,10 +170,10 @@ public class MainMenuGui {
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					System.out.println("getSelectedFile() : " 
 							+  chooser.getSelectedFile());
-					a.updateHistoryCSV(ImportCSV.mergeHash(strongPoints, ImportCombinedCSV.filterCSV(chooser.getSelectedFile().getAbsolutePath(), "")));
+					database.updateHistoryCSV(ImportCSV.mergeHash(strongPoints, ImportCombinedCSV.filterCSV(chooser.getSelectedFile().getAbsolutePath(), "")));
 
-					txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
-					txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+					txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
+					txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
 				}
 				else {
 					System.out.println("No Selection ");
@@ -203,12 +192,12 @@ public class MainMenuGui {
 				chooser.setAcceptAllFileFilterUsed(false);
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
-					p = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",a);
-					p.start();
+					fileWatcher = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",database);
+					fileWatcher.start();
 
 					Runnable updater = new Runnable(){
 						public void run(){
-							while(watcher.holdsLock(a)) {
+							while(watcher.holdsLock(database)) {
 							}
 							try {
 								Thread.sleep(500);
@@ -216,8 +205,8 @@ public class MainMenuGui {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
-							txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+							txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
+							txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
 						}
 					};
 					Thread t2 = new Thread(updater);
@@ -230,8 +219,8 @@ public class MainMenuGui {
 				else {
 					System.out.println("No Selection ");
 				}
-				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
-				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
+				txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
+				txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
 
 			}
 		});
@@ -239,7 +228,7 @@ public class MainMenuGui {
 		JButton btnClearAll = new JButton("Clear all");
 		btnClearAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				a.clear();
+				database.clear();
 				btnLoadFolder.setEnabled(true);
 				txtrInfo.setText("Empty filter");
 				txtrEmptyDatabase.setText("Empty Database");
@@ -254,10 +243,10 @@ public class MainMenuGui {
 				chooser.setCurrentDirectory(new java.io.File("."));
 				int retrival = chooser.showSaveDialog(null);
 				if (retrival == JFileChooser.APPROVE_OPTION) {
-					System.out.println("Saving " + a.getPoints().size() + " Points..");
+					System.out.println("Saving " + database.getPoints().size() + " Points..");
 					Runnable myRunnable = new Runnable(){
 						public void run(){
-							ExportCSV.writeCsvFile(a.getPoints(), chooser.getSelectedFile()+".csv",1);
+							ExportCSV.writeCsvFile(database.getPoints(), chooser.getSelectedFile()+".csv",1);
 							System.out.println("Finished writing CSV");
 						}
 					};
@@ -276,10 +265,10 @@ public class MainMenuGui {
 				chooser.setCurrentDirectory(new java.io.File("."));
 				int retrival = chooser.showSaveDialog(null);
 				if (retrival == JFileChooser.APPROVE_OPTION) {
-					System.out.println("Saving " + a.getPoints().size() + " Points..");
+					System.out.println("Saving " + database.getPoints().size() + " Points..");
 					Runnable myRunnable = new Runnable(){
 						public void run(){
-							ExportKML.writeKMLFile(a.getPoints(), chooser.getSelectedFile()+".kml",2);
+							ExportKML.writeKMLFile(database.getPoints(), chooser.getSelectedFile()+".kml",2);
 							System.out.println("Finished writing KML");
 						}
 					};
@@ -383,15 +372,15 @@ public class MainMenuGui {
 				System.out.println(lastFilter2);
 				if(or) {
 					orAndfilter = ImportCombinedCSV.filter(filter11,filter22,"OR");
-					a.filter(orAndfilter);
+					database.filter(orAndfilter);
 				}
 				else if(and) {
 					orAndfilter = ImportCombinedCSV.filter(filter11,filter22,"AND");
-					a.filter(orAndfilter);
+					database.filter(orAndfilter);
 				}
 				txtrInfo.setText(orAndfilter.toString());
-				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
-				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+				txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
+				txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
 			}
 		});
 
@@ -414,17 +403,17 @@ public class MainMenuGui {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					System.out.println(a.getPoints().size());
+					System.out.println(database.getPoints().size());
 				}
 				else {
 					System.out.println("No Selection ");
 				}
 				System.out.println("Loaded filter: " + orAndfilter.toString());
 
-				a.filter(orAndfilter);
+				database.filter(orAndfilter);
 				txtrInfo.setText(orAndfilter.toString());
-				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
-				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+				txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
+				txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
 			}
 		});
 
@@ -449,10 +438,10 @@ public class MainMenuGui {
 		JButton btnClearFilter = new JButton("Clear Filter");
 		btnClearFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				a.filteredStrongPoints.clear();
+				database.filteredStrongPoints.clear();
 				txtrInfo.setText("Empty Filter");
-				txtrEmptyDatabase.setText("Database size: " + a.getPoints().size());
-				txtrMacsAddresses.setText(a.diffMAC() + " MAC's Addresses");
+				txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
+				txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
 			}
 		});
 
@@ -489,7 +478,7 @@ public class MainMenuGui {
 						null, null,
 						"a4:2b:b0:ad:2d:34");
 				if(s!=null) {
-					double [] loc = a.findAPloc(s);
+					double [] loc = database.findAPloc(s);
 					if(loc[0] == 0.0 && loc[1] == 0.0 && loc[2] == 0.0) {
 						JOptionPane.showMessageDialog((Component)e.getSource(),
 								"Couldn't find location",
@@ -517,7 +506,7 @@ public class MainMenuGui {
 						null, null,
 						"2017-12-01 10:43:46,Lenovo PB2-690Y,0,0,0.0,2,HOTBOX1234,30:b5:c2:6e:12:d4,1,-88,Eldad_2EX,80:1f:02:e8:b9:cc,11,-81");
 				if(s!=null) {
-					double [] loc = a.findUserloc(s.split(","));
+					double [] loc = database.findUserloc(s.split(","));
 					if(loc[0] == 0.0 && loc[1] == 0.0 && loc[2] == 0.0) {
 						JOptionPane.showMessageDialog((Component)e.getSource(),
 								"Couldn't find location",
@@ -563,8 +552,5 @@ public class MainMenuGui {
 		ObjectInputStream ois = new ObjectInputStream(fis);
 		orAndfilter = (Filter) ois.readObject();
 		ois.close();
-	}
-
-	private static void addPopup(Component component, final JPopupMenu popup) {
 	}
 }
