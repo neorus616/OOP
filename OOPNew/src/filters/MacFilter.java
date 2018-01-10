@@ -1,3 +1,4 @@
+package filters;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -5,6 +6,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+
+import wifi.Networks;
 
 /**
  * 
@@ -16,9 +19,11 @@ import org.apache.commons.csv.CSVRecord;
 public class MacFilter {
 
 	/**
+	 * 
 	 * Build database with only matched mac filter
 	 * @param path -  File path.
 	 * @param wifiScan - User current APs scan.
+	 * @return Hashtable of filtered networks
 	 */
 	public static Hashtable<String, Networks> test(String path, Networks wifiScan) {
 		Hashtable<String, Networks> APs = new Hashtable<>();

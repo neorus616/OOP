@@ -1,13 +1,18 @@
+package io;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import filters.AndFilter;
+import filters.Filter;
+import filters.IDFilter;
+import filters.LocationFilter;
+import filters.OrFilter;
+import filters.TimeFilter;
+import wifi.Networks;
 
 /**
  * 
@@ -22,11 +27,11 @@ public class ImportCombinedCSV {
 	 * 
 	 * @param path -  File path.
 	 * @param filter - Attribute to filter with.
+	 * @return Hashtable of filtered networks.
 	 */
 	public static Hashtable<String, Networks> filterCSV(String path, String filter) {
 		Hashtable<String, Networks> strongPoints = new Hashtable<>();
 		try {
-//			String newPath = newPath(path);
 			Filter filter1 = filter(filter, false);
 			if(validCSV(path)) {
 				FileReader in = new FileReader(path);
@@ -103,6 +108,12 @@ public class ImportCombinedCSV {
 		return validCSV;
 	}
 	
+	/**
+	 * 
+	 * @param filter - String that explain the filter
+	 * @param not - states if NOT operator is used
+	 * @return Filter object
+	 */
 	public static Filter filter(String filter, boolean not) {
 		int k = filter.lastIndexOf('=');
 		if(filter.contains("ID")) //ID = lenovo
@@ -114,6 +125,13 @@ public class ImportCombinedCSV {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param filter1 - First filter
+	 * @param filter2 - Second filter
+	 * @param operator - states if AND or OR is used
+	 * @return Filter object
+	 */
 	public static Filter filter(Filter filter1, Filter filter2, String operator) {
 		if(filter1 == null)
 			return filter2;
@@ -126,6 +144,4 @@ public class ImportCombinedCSV {
 		return null;
 		
 	}
-	
-	
 }

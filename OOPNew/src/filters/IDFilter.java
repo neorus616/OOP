@@ -1,3 +1,6 @@
+package filters;
+import wifi.Networks;
+
 /**
  * 
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>

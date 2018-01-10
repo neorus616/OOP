@@ -1,3 +1,4 @@
+package io;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,9 +7,10 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import wifi.Networks;
+import wifi.Wifi;
 
 /**
  * 
@@ -43,8 +45,9 @@ public class ExportCSV {
 
 	/**
 	 * 
-	 * @param network - object that contains: id, time, location and #WiFi networks (up to 10 points).
+	 * @param strongPoints - object that contains: id, time, location and #WiFi networks (up to 10 points).
 	 * @param fileName - holds the path and file name where it saves the new CSV file.
+	 * @param state - state header of file
 	 */
 	public static void writeCsvFile(Hashtable<String, Networks> strongPoints, String fileName, int state) {
 		FileWriter fileWriter = null;

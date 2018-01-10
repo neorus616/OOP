@@ -1,3 +1,4 @@
+package ui;
 /**
  * 
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>
@@ -5,6 +6,12 @@
  */
 
 import java.util.Hashtable;
+
+import Algorithms.EstimateLoc;
+import filters.Filter;
+import wifi.APNetworks;
+import wifi.Networks;
+import wifi.Wifi;
 
 public class history {
 

@@ -1,3 +1,4 @@
+package io;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -5,6 +6,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+
+import wifi.Networks;
 
 /**
  * 
@@ -19,8 +22,10 @@ import org.apache.commons.csv.CSVRecord;
 public class ImportCSV {
 	
 	/**
+	 * 
 	 * @param path - User input for the CSV directory.
 	 * @exception IllegalArgumentException - No CSV files or not a directory.
+	 * @return Hashtable of networks from all the scans in path
 	 */
 	public static Hashtable<String, Networks> validPath(String path) {
 		Hashtable<String, Networks> strongPoints =  new Hashtable<>();
@@ -50,9 +55,11 @@ public class ImportCSV {
 	}
 
 	/**
+	 * 
 	 * @param path - Directory path.
 	 * @param fileName - File name.
 	 * @exception IllegalArgumentException - The file corrupted or in wrong format.
+	 * @return Hashtable of networks of a single scan.
 	 */
 	public static Hashtable<String, Networks> readCSV(String path, String fileName) {
 		Hashtable<String, Networks> strongPoints =  new Hashtable<>();

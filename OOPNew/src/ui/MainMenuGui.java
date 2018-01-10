@@ -1,3 +1,12 @@
+/**
+ * 
+ * @author Kostia Kazakov &amp; Yogev Rahamim <br>
+ * @version 2.0 
+ * Description:
+ * GUI that can add database/s, check if there are changes, save database, filter database, save/load filter, calculate user or AP location.
+ */
+
+package ui;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -15,12 +24,18 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.awt.event.ActionEvent;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+import filters.Filter;
+import io.ExportCSV;
+import io.ExportKML;
+import io.ImportCSV;
+import io.ImportCombinedCSV;
 import java.awt.Component;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
 import net.miginfocom.swing.MigLayout;
+import wifi.Networks;
 import javax.swing.JTextArea;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
@@ -38,11 +53,11 @@ public class MainMenuGui {
 	Filter filter11;
 	Filter filter22;
 	Filter orAndfilter;
-
 	private JFrame frame;
 
 	/**
 	 * Launch the application.
+	 * @param args - args
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -519,10 +534,9 @@ public class MainMenuGui {
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
-				System.out.println();
 			}
 		});
-		
+
 		btnFindApLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
 		btnFindUserLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
 		frame.getContentPane().add(btnFindApLocationalgo, "cell 15 5 1 2,grow");

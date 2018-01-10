@@ -1,3 +1,4 @@
+package wifi;
 /**
  * 
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>

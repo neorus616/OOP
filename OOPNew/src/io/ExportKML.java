@@ -1,13 +1,12 @@
+package io;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Map;
-
 import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Folder;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.Placemark;
+import wifi.Networks;
 
 /**
  * 
@@ -16,15 +15,16 @@ import de.micromata.opengis.kml.v_2_2_0.Placemark;
  * Description:
  * Use JAK library to write KML file from the CSV file (which filterCSV sent).
  */
-class ExportKML {
+public class ExportKML {
 
 	/** 
 	 * 
 	 * @param strongPoints - a filtered hashmap.
 	 * @param fileName -path and file name where it saves the new KML file.
+	 * @param state - states which kind of kml we want to write
 	 */
 
-	static void writeKMLFile(Hashtable<String, Networks> strongPoints, String fileName, int state) {
+	public static void writeKMLFile(Hashtable<String, Networks> strongPoints, String fileName, int state) {
 
 		final Kml kml = new Kml();
 		Document document = kml.createAndSetDocument();

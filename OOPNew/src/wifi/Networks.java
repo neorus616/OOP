@@ -1,6 +1,8 @@
+package wifi;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import filters.Filter;
 
 /**
  * 
@@ -114,7 +116,7 @@ public class Networks {
 	public double getLon() {
 		return _lon;
 	}
-	
+
 	/**
 	 * set Object's Longitude.
 	 * @param lon - Longitude.
@@ -176,7 +178,7 @@ public class Networks {
 	public boolean isLocation(String location) {
 		String splitBy = ",";
 		String[] gps = location.split(splitBy);
-		return (Haversine.distance(this.getLat(), this.getLon(), Double.parseDouble(gps[0]), Double.parseDouble(gps[1])) <= Double.parseDouble(gps[2]));
+		return (distance(this.getLat(), this.getLon(), Double.parseDouble(gps[0]), Double.parseDouble(gps[1])) <= Double.parseDouble(gps[2]));
 	}
 
 	/**
@@ -222,6 +224,35 @@ public class Networks {
 	 */
 	public boolean filter(Filter f){
 		return f.test(this);
+	}
+
+	/**
+	 * @author Jason Winn <br>  
+	 *  * @version 1.0
+	 * <b>Description:</b> <br>
+	 * Calculate distance between two locations on earth
+	 * using the Haversine formula.
+	 * Source: https://github.com/jasonwinn/haversine/blob/master/Haversine.java
+	 * @param startLat - Start Latitude
+	 * @param startLong - Start Longitude
+	 * @param endLat - End Latitude
+	 * @param endLong - End Longitude
+	 * @return distance between 2 points.
+	 */
+	public static double distance(double startLat, double startLong,
+			double endLat, double endLong) {
+
+
+		double dLat  = Math.toRadians((endLat - startLat));
+		double dLong = Math.toRadians((endLong - startLong));
+
+		startLat = Math.toRadians(startLat);
+		endLat   = Math.toRadians(endLat);
+
+		double a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(startLat) * Math.cos(endLat) * Math.pow(Math.sin(dLong / 2), 2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		int EARTH_RADIUS = 6371; // Approximate Earth radius in KM
+		return EARTH_RADIUS * c*1000; // <-- distance
 	}
 
 }

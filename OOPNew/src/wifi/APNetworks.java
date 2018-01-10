@@ -1,3 +1,4 @@
+package wifi;
 import java.util.ArrayList;
 
 /**
@@ -25,9 +26,6 @@ public class APNetworks {
 	 * 
 	 * @param id - Phone.
 	 * @param time - Time "yyyy-MM-dd HH:mm:ss".
-	 * @param lat - Latitude.
-	 * @param lon - Longitude.
-	 * @param alt - Altitude.
 	 */
 	public APNetworks(String id, String time) {
 		_id = id;
@@ -43,12 +41,16 @@ public class APNetworks {
 		return "ID=" + _id + ", Time=" + _time + ", #WiFi networks =" + _points.size()+ ": " + _points.toString();
 	}
 	
+
 	/**
 	 * 
 	 * @param ssid - AP Name.
 	 * @param mac - MAC Address.
 	 * @param signal - Signal strength.
 	 * @param channel - Frequency.
+	 * @param lat - Latitude.
+	 * @param lon - Longitude.
+	 * @param alt - Altitude.
 	 */
 		public void add(String ssid, String mac, int signal, int channel, double lat, double lon, double alt){
 		AP p = new AP(ssid, mac, signal, channel, lat, lon, alt);

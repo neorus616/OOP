@@ -1,3 +1,4 @@
+package filters;
 /**
  * 
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>
@@ -6,6 +7,8 @@
  * filter interface.
  */
 import java.io.Serializable;
+
+import wifi.Networks;
 
 public interface Filter extends Serializable {
 

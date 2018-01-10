@@ -1,3 +1,4 @@
+package filters;
 /**
  * 
  * @author Kostia Kazakov &amp; Yogev Rahamim <br>
@@ -8,6 +9,8 @@
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import wifi.Networks;
 
 
 public class TimeFilter implements Filter {
