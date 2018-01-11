@@ -54,6 +54,9 @@ public class MainMenuGui {
 	Filter filter22;
 	Filter orAndfilter;
 	private JFrame frame;
+	history database;
+	JTextArea txtrEmptyDatabase;
+	JTextArea txtrMacsAddresses;
 
 	/**
 	 * Launch the application.
@@ -79,12 +82,18 @@ public class MainMenuGui {
 		initialize();
 	}
 
+	public void update() {
+		txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
+		txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
+	}
+	
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		strongPoints = new Hashtable<>();
-		history database = new history(strongPoints);
+		database = new history(strongPoints);
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frame.setBounds(100, 100, 710, 615);
@@ -130,11 +139,11 @@ public class MainMenuGui {
 		txtrInfo.setEditable(false);
 		txtrInfo.setText("Empty filter");
 
-		JTextArea txtrEmptyDatabase = new JTextArea();
+		txtrEmptyDatabase = new JTextArea();
 		txtrEmptyDatabase.setText("Empty Database");
 		txtrEmptyDatabase.setEditable(false);
 
-		JTextArea txtrMacsAddresses = new JTextArea();
+		txtrMacsAddresses = new JTextArea();
 		txtrMacsAddresses.setText("0 MAC's Addresses");
 		txtrMacsAddresses.setEditable(false);
 
@@ -186,9 +195,7 @@ public class MainMenuGui {
 					System.out.println("getSelectedFile() : " 
 							+  chooser.getSelectedFile());
 					database.updateHistoryCSV(ImportCSV.mergeHash(strongPoints, ImportCombinedCSV.filterCSV(chooser.getSelectedFile().getAbsolutePath(), "")));
-
-					txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
-					txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
+					update();
 				}
 				else {
 					System.out.println("No Selection ");
@@ -208,35 +215,15 @@ public class MainMenuGui {
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
 					fileWatcher = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",database);
+					fileWatcher.register(MainMenuGui.this);
 					fileWatcher.start();
-
-					Runnable updater = new Runnable(){
-						public void run(){
-							while(watcher.holdsLock(database)) {
-							}
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
-							txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
-						}
-					};
-					Thread t2 = new Thread(updater);
-					t2.start();
-
-					System.out.println("getSelectedFolder : " 
-							+  chooser.getSelectedFile().getAbsolutePath());
-					btnLoadFolder.setEnabled(false);					
+					System.out.println("Loading Folder  : " 
+							+  chooser.getSelectedFile().getAbsolutePath());			
 				}
 				else {
 					System.out.println("No Selection ");
 				}
-				txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
-				txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
-
+				update();
 			}
 		});
 
@@ -394,8 +381,7 @@ public class MainMenuGui {
 					database.filter(orAndfilter);
 				}
 				txtrInfo.setText(orAndfilter.toString());
-				txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
-				txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
+				update();
 			}
 		});
 
@@ -427,8 +413,7 @@ public class MainMenuGui {
 
 				database.filter(orAndfilter);
 				txtrInfo.setText(orAndfilter.toString());
-				txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
-				txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
+				update();
 			}
 		});
 

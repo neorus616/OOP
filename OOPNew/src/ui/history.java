@@ -81,7 +81,7 @@ public class history {
 	 * Calculate how many different MAC address in current database(filtered if not empty).
 	 * @return MAC count
 	 */
-	public int diffMAC() {
+	public int diffMAC(){
 		Hashtable<String, Wifi> wifiCount = new Hashtable<>();
 		if(this.filteredStrongPoints.isEmpty()) {
 			for (String key : this.strongPoints.keySet()) {

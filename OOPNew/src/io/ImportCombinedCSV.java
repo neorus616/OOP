@@ -32,7 +32,7 @@ public class ImportCombinedCSV {
 	public static Hashtable<String, Networks> filterCSV(String path, String filter) {
 		Hashtable<String, Networks> strongPoints = new Hashtable<>();
 		try {
-			Filter filter1 = filter(filter, false);
+			Filter filterBy = filter(filter, false);
 			if(validCSV(path)) {
 				FileReader in = new FileReader(path);
 				BufferedReader bufferedReader = new BufferedReader(in);
@@ -51,8 +51,7 @@ public class ImportCombinedCSV {
 						double signal = Double.parseDouble(record.get("Signal" + i));
 						network = new Networks(id, time, lat, lon, alt);
 						network.add(ssid, mac, (int)signal, channel);
-						
-						if(filter1 != null && filter1.test(network)) {
+						if(filterBy != null && filterBy.test(network)) {
 							if(!strongPoints.containsKey(network.getPoints().get(0).getMAC())) {
 								strongPoints.put(network.getPoints().get(0).getMAC(), network);
 							}
@@ -62,7 +61,6 @@ public class ImportCombinedCSV {
 							}	
 						}
 						else if(filter.equals("")){
-							
 							for (int k = i+1; k <= Integer.parseInt(record.get("#WIFI Networks")); k++) {
 								mac = record.get("MAC" + k);
 								ssid = record.get("SSID" + k);
@@ -109,7 +107,7 @@ public class ImportCombinedCSV {
 			validCSV = false;
 		return validCSV;
 	}
-	
+
 	/**
 	 * 
 	 * @param filter - String that explain the filter
@@ -122,14 +120,14 @@ public class ImportCombinedCSV {
 			return new IDFilter(filter.substring(k+1).trim(), !not);
 		if(filter.contains("Location") || filter.contains("location")) { 
 			if(filter.substring(k+1).trim().split(",").length == 6)  //Location = 100,200,150,200,30,60
-			return new LocationFilter(filter.substring(k+1).trim().split(","), !not); //Location = 32.16876665,34.81320794,100
+				return new LocationFilter(filter.substring(k+1).trim().split(","), !not); //Location = 32.16876665,34.81320794,100
 			else return new LocationFilter(filter.substring(k+1).trim().split(",")[0],filter.substring(k+1).trim().split(",")[1],filter.substring(k+1).trim().split(",")[2]);
 		}
 		if(filter.contains("Date") || filter.contains("date")) //Date = 2017-10-27 16:27:03,2017-10-27 16:37:03
 			return new TimeFilter(filter.substring(k+1).trim().split(","), !not);
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param filter1 - First filter
@@ -147,6 +145,6 @@ public class ImportCombinedCSV {
 		else if(operator.equals("OR"))
 			return new OrFilter(filter1,filter2);
 		return null;
-		
+
 	}
 }
