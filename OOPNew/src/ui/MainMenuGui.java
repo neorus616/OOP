@@ -29,6 +29,7 @@ import io.ExportCSV;
 import io.ExportKML;
 import io.ImportCSV;
 import io.ImportCombinedCSV;
+import io.ImportSQL;
 import java.awt.Component;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -401,7 +402,6 @@ public class MainMenuGui {
 					try {
 						readFilter(chooser.getSelectedFile().getAbsolutePath());
 					} catch (ClassNotFoundException | IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					System.out.println(database.getPoints().size());
@@ -427,7 +427,6 @@ public class MainMenuGui {
 					try {
 						writeFilter(chooser.getSelectedFile()+".ser");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -471,6 +470,13 @@ public class MainMenuGui {
 		btnFindApLocationalgo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String s = (String)JOptionPane.showInputDialog(
+						frame,
+						"Enter MAC Address to find AP location:\n",
+						"Algo 1",
+						JOptionPane.PLAIN_MESSAGE,
+						null, null,
+						"a4:2b:b0:ad:2d:34");
+				String s2 = (String)JOptionPane.showInputDialog(
 						frame,
 						"Enter MAC Address to find AP location:\n",
 						"Algo 1",
@@ -522,8 +528,9 @@ public class MainMenuGui {
 			}
 		});
 
-		btnFindApLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
-		btnFindUserLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
+		btnFindApLocationalgo.setIcon(new ImageIcon("https://github.com/neorus616/OOP/tree/master/OOPNew/Computer.gif"));
+		//btnFindUserLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
+		btnFindUserLocationalgo.setIcon(new ImageIcon("https://github.com/neorus616/OOP/tree/master/OOPNew/Computer.gif"));
 		frame.getContentPane().add(btnFindApLocationalgo, "cell 15 5 1 2,grow");
 		frame.getContentPane().add(btnFindUserLocationalgo, "cell 15 9 1 2,grow");
 		frame.getContentPane().add(txtpnAlt, "cell 2 6 2 1");
@@ -538,7 +545,6 @@ public class MainMenuGui {
 	}
 
 	protected void writeFilter(String fileName) throws IOException {
-		// TODO Auto-generated method stub
 		FileOutputStream fos = new FileOutputStream(fileName);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(orAndfilter);
@@ -546,7 +552,6 @@ public class MainMenuGui {
 	}
 
 	protected void readFilter(String fileName) throws IOException, ClassNotFoundException {
-		// TODO Auto-generated method stub
 		FileInputStream fis = new FileInputStream(fileName);
 		ObjectInputStream ois = new ObjectInputStream(fis);
 		orAndfilter = (Filter) ois.readObject();
