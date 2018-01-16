@@ -61,7 +61,7 @@ public class Networks {
 	public void add(String ssid, String mac, int signal, int channel){
 		Wifi p = new Wifi(ssid, mac, signal, channel);
 		if(_points.size()==_numAP) {
-			int weak = checkSignal();
+			int weak = minSignal();
 			if(_points.get(weak).compareTo(p) == -1) {
 				_points.remove(weak);
 				_points.add(p);
@@ -153,7 +153,7 @@ public class Networks {
 	 * 
 	 * @return Index of weakest AP in Object.
 	 */
-	public int checkSignal() {
+	public int minSignal() {
 		int min = 0;
 		for (int i = 1; i < _points.size(); i++) 
 			if(_points.get(i).compareTo(_points.get(min)) == -1)

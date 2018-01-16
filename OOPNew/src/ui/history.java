@@ -7,7 +7,7 @@ package ui;
 
 import java.util.Hashtable;
 
-import Algorithms.EstimateLoc;
+import algorithms.EstimateLoc;
 import filters.Filter;
 import wifi.APNetworks;
 import wifi.Networks;
