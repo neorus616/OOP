@@ -24,11 +24,11 @@ public class ImportSQL {
 		String port = "3306";
 		String db = "oop_course_ariel";
 		String table = "ex4_db";
-		test_101(ip,pw,user,port,db,table);
+		connectSQL(ip,pw,user,port,db,table);
 	}
 	@SuppressWarnings("resource")
-	public static Hashtable<String, Networks> test_101(String ip, String pw, String user, String port, String db, String table) {
-		String url = "jdbc:mysql://"+ip+":"+port+"/"+db;
+	public static Hashtable<String, Networks> connectSQL(String ip, String pw, String user, String port, String db, String table) {
+		String url = "jdbc:mysql://"+ip+":"+port+"/"+db+"?useSSL=false";
 		Statement st = null;
 		ResultSet rs = null;
 		Hashtable<String, Networks> strongPoints = new Hashtable<>();
@@ -37,8 +37,7 @@ public class ImportSQL {
 			st = _con.createStatement();
 			rs = st.executeQuery("SELECT VERSION()");
 			if (rs.next()) {
-				//rs.getString(1);
-				System.out.println(rs.getString(1));
+				rs.getString(1);
 				PreparedStatement pst = _con.prepareStatement("SELECT * FROM "+table);
 				rs = pst.executeQuery();
 				Networks network = new Networks();

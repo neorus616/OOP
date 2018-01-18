@@ -8,13 +8,20 @@
 
 package ui;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
+import java.awt.Insets;
+
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Color;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,6 +47,7 @@ import wifi.Networks;
 import javax.swing.JTextArea;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 public class MainMenuGui {
 
@@ -87,18 +95,41 @@ public class MainMenuGui {
 		txtrEmptyDatabase.setText("Database size: " + database.getPoints().size());
 		txtrMacsAddresses.setText(database.diffMAC() + " MAC's Addresses");
 	}
-	
-	
+
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		strongPoints = new Hashtable<>();
 		database = new history(strongPoints);
+		fileWatcher = new watcher(database);
+		fileWatcher.register(MainMenuGui.this);
+		fileWatcher.start();
+		//Thread.yield();		
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frame.setBounds(100, 100, 710, 615);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we){
+				Object[] options = { "OK", "Cancel" };
+				int choice = JOptionPane.showOptionDialog(null, 
+						"You really want to quit?", 
+						"Quit?", 
+						JOptionPane.YES_NO_OPTION, 
+						JOptionPane.QUESTION_MESSAGE, 
+						null, 
+						options, 
+						options[0]);
+				if (choice == JOptionPane.YES_OPTION)
+				{
+					System.exit(0);
+				}
+			}
+		});
 
 		JTextField txtpnStartDate = new JTextField();
 		txtpnStartDate.setText("Start Date");
@@ -197,6 +228,9 @@ public class MainMenuGui {
 							+  chooser.getSelectedFile());
 					database.updateHistoryCSV(ImportCSV.mergeHash(strongPoints, ImportCombinedCSV.filterCSV(chooser.getSelectedFile().getAbsolutePath(), "")));
 					update();
+					if(fileWatcher != null && fileWatcher.isAlive()) {
+						fileWatcher.csvWatch(chooser.getSelectedFile().getAbsolutePath());
+					}
 				}
 				else {
 					System.out.println("No Selection ");
@@ -215,16 +249,13 @@ public class MainMenuGui {
 				chooser.setAcceptAllFileFilterUsed(false);
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
-					fileWatcher = new watcher(chooser.getSelectedFile().getAbsolutePath()+"\\",database);
-					fileWatcher.register(MainMenuGui.this);
-					fileWatcher.start();
+					fileWatcher.folderWatch(chooser.getSelectedFile().getAbsolutePath()+"\\");
 					System.out.println("Loading Folder  : " 
 							+  chooser.getSelectedFile().getAbsolutePath());			
 				}
 				else {
 					System.out.println("No Selection ");
 				}
-				update();
 			}
 		});
 
@@ -444,7 +475,7 @@ public class MainMenuGui {
 			}
 		});
 
-		frame.getContentPane().setLayout(new MigLayout("", "[75.00px][6px][75px][16px][75px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][23.00,grow][][][][grow]"));
+		frame.getContentPane().setLayout(new MigLayout("", "[75.00px][6px][75px,grow][16px][75px][6px][9px][6px][25px][6px][41px][82px,grow][12px][3px][6px][126px][107px]", "[28px][29px][34px][24px][24px][28px][28px][][][][][23.00,grow][][][][grow]"));
 		frame.getContentPane().add(chckbxNot1Filter, "cell 0 1");
 		frame.getContentPane().add(comboBoxFilter1, "cell 2 1 3 1");
 		frame.getContentPane().add(btnUpdateFilter, "cell 0 2 3 1");
@@ -476,13 +507,7 @@ public class MainMenuGui {
 						JOptionPane.PLAIN_MESSAGE,
 						null, null,
 						"a4:2b:b0:ad:2d:34");
-				String s2 = (String)JOptionPane.showInputDialog(
-						frame,
-						"Enter MAC Address to find AP location:\n",
-						"Algo 1",
-						JOptionPane.PLAIN_MESSAGE,
-						null, null,
-						"a4:2b:b0:ad:2d:34");
+
 				if(s!=null) {
 					double [] loc = database.findAPloc(s);
 					if(loc[0] == 0.0 && loc[1] == 0.0 && loc[2] == 0.0) {
@@ -528,8 +553,42 @@ public class MainMenuGui {
 			}
 		});
 
+		JButton btnaddsql = new JButton("Add database from SQL");
+		btnaddsql.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField ip = new JTextField("5.29.193.52");
+				JTextField port = new JTextField("3306");
+				JTextField db = new JTextField("oop_course_ariel");
+				JTextField table = new JTextField("ex4_db");
+				JTextField user = new JTextField("oop2");
+				JTextField pw = new JTextField("Lambda2();");
+				JPanel panel = new JPanel(new GridLayout(0, 2));
+				panel.add(new JLabel("Enter IP:"));
+				panel.add(ip);
+				panel.add(new JLabel("Enter Port:"));
+				panel.add(port);
+				panel.add(new JLabel("Enter Database name:"));
+				panel.add(db);
+				panel.add(new JLabel("Enter Table name:"));
+				panel.add(table);
+				panel.add(new JLabel("Enter Username:"));
+				panel.add(user);
+				panel.add(new JLabel("Enter Password:"));
+				panel.add(pw);
+				int result = JOptionPane.showConfirmDialog(null, panel, "SQL Connect",
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				if (result == JOptionPane.OK_OPTION) {
+					database.updateHistoryCSV(ImportCSV.mergeHash(strongPoints, ImportSQL.connectSQL(ip.getText(), pw.getText(), user.getText(), port.getText(), db.getText(), table.getText())));
+					update();
+					if(fileWatcher.isAlive())
+					fileWatcher.sqlWatch(ip.getText(),port.getText(),db.getText(),user.getText(),pw.getText(),table.getText());
+				} else {
+					System.out.println("Cancelled");
+				}
+			}
+		});
+
 		btnFindApLocationalgo.setIcon(new ImageIcon("https://github.com/neorus616/OOP/tree/master/OOPNew/Computer.gif"));
-		//btnFindUserLocationalgo.setIcon(new ImageIcon(MainMenuGui.class.getResource("/com/sun/java/swing/plaf/windows/icons/Computer.gif")));
 		btnFindUserLocationalgo.setIcon(new ImageIcon("https://github.com/neorus616/OOP/tree/master/OOPNew/Computer.gif"));
 		frame.getContentPane().add(btnFindApLocationalgo, "cell 15 5 1 2,grow");
 		frame.getContentPane().add(btnFindUserLocationalgo, "cell 15 9 1 2,grow");
@@ -540,7 +599,10 @@ public class MainMenuGui {
 		frame.getContentPane().add(txtrInfo, "cell 0 8 17 1");
 		frame.getContentPane().add(txtrEmptyDatabase, "cell 0 9 17 1");
 		frame.getContentPane().add(txtrMacsAddresses, "cell 0 10 17 1");
+
+		frame.getContentPane().add(btnaddsql, "cell 11 11");
 		frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{chckbxNot1Filter, btnClearAll, btnSaveCombinedCsv, btnSaveKmlFile, btnLoadFile, btnLoadFolder, chckbxNot2Filter}));
+
 
 	}
 
@@ -557,4 +619,5 @@ public class MainMenuGui {
 		orAndfilter = (Filter) ois.readObject();
 		ois.close();
 	}
+
 }
