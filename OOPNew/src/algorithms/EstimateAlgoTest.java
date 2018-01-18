@@ -1,15 +1,13 @@
+package algorithms;
 /**
  * 
  */
-package algorithms;
+
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
 
+import algorithms.EstimateAlgo;
 import wifi.AP;
 import wifi.APNetworks;
 
@@ -53,8 +51,6 @@ class EstimateAlgoTest {
 		networks.add("ssid4", "mac4", -77, 10, 110, 122, 45);
 		networks.add("ssid5", "mac5", -65, 10, 115, 122, 37);
 		double[] d = EstimateAlgo.wcenter(networks.getPoints());
-		System.out.println(Arrays.toString(p));
-		System.out.println(Arrays.toString(d));
 		assertEquals(d[0]==p[0],true);
 		assertEquals(d[1]==p[1],true);
 		assertEquals(d[2]==p[2],true);
