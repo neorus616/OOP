@@ -29,6 +29,8 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
+
 		<nature>org.eclipse.pde.PluginNature</nature>
+
 	</natures>
 </projectDescription>
