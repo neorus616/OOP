@@ -2,6 +2,8 @@ package io;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+import io.ImportCombinedCSV;
+
 class ImportCombinedCSVTest {
 	
     @Test
