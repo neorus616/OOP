@@ -29,9 +29,8 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
-<<<<<<< Upstream, based on origin/master
-=======
+
 		<nature>org.eclipse.pde.PluginNature</nature>
->>>>>>> d5f78de gitignore
+
 	</natures>
 </projectDescription>

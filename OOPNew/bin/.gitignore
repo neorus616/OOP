@@ -1,6 +1,4 @@
-<<<<<<< Upstream, based on origin/master
 /history.java
-=======
 /algorithms/
 /filters/
 /io/
@@ -9,4 +7,4 @@
 /test/
 /ui/
 /wifi/
->>>>>>> d5f78de gitignore
+
