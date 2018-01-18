@@ -25,7 +25,9 @@ class NetworksTest {
 		networkTest.add("ssid9","mac", -88, 10);
 		networkTest.add("ssid10","mac", -93, 10);
 		networkTest.add("ssid11","mac", -83, 10);
-		assertEquals(networkTest.getPoints().get(3).getSignal(),-83 );
+		assertEquals(networkTest.getPoints().get(9).getSignal(),-83);
+		assertEquals(networkTest.getPoints().get(3).getSignal(),-98);
+		
 	}
 
 	@Test
@@ -46,8 +48,6 @@ class NetworksTest {
 		xpoints.add(p2);
 		Wifi p3 = new Wifi("ssid3","mac", -99, 10);
 		xpoints.add(p3);
-		Wifi p4 = new Wifi("ssid11","mac", -83, 10);
-		xpoints.add(p4);
 		Wifi p5 = new Wifi("ssid5","mac", -98, 10);
 		xpoints.add(p5);
 		Wifi p6 = new Wifi("ssid6","mac", -99, 10);
@@ -60,7 +60,21 @@ class NetworksTest {
 		xpoints.add(p9);
 		Wifi p10 = new Wifi("ssid10","mac", -93, 10);
 		xpoints.add(p10);
-		assertEquals(networkTest.getPoints(),xpoints);
+		Wifi p4 = new Wifi("ssid11","mac", -83, 10);
+		xpoints.add(p4);
+		
+		networkTest.add("ssid1","mac", -80, 10);
+		networkTest.add("ssid2","mac", -65, 10);
+		networkTest.add("ssid3","mac", -99, 10);
+		networkTest.add("ssid4","mac", -120, 10);  //worse
+		networkTest.add("ssid5","mac", -98, 10);
+		networkTest.add("ssid6","mac", -99, 10);
+		networkTest.add("ssid7","mac", -87, 10);
+		networkTest.add("ssid8","mac", -75, 10);
+		networkTest.add("ssid9","mac", -88, 10);
+		networkTest.add("ssid10","mac", -93, 10);
+		networkTest.add("ssid11","mac", -83, 10);
+		assertEquals(networkTest.getPoints().toString(),xpoints.toString());
 	}
 
 

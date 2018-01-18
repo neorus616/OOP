@@ -7,16 +7,19 @@ package ui;
 
 import java.util.Hashtable;
 
-import Algorithms.EstimateLoc;
+import algorithms.EstimateLoc;
 import filters.Filter;
+import io.ImportCSV;
 import wifi.APNetworks;
 import wifi.Networks;
 import wifi.Wifi;
 
 public class history {
-
-	Hashtable<String, Networks> strongPointsCSV = new Hashtable<>();
+	
 	Hashtable<String, Networks> strongPoints = new Hashtable<>();
+	Hashtable<String, Networks> strongPointsCSV = new Hashtable<>();
+	Hashtable<String, Networks> strongPointsFolder = new Hashtable<>();
+	Hashtable<String, Networks> strongPointsSQL = new Hashtable<>();
 	Hashtable<String, Networks> filteredStrongPoints = new Hashtable<>();
 
 	/**
@@ -52,7 +55,48 @@ public class history {
 	 */
 	public void updateHistoryCSV(Hashtable<String, Networks> strongPoints) {
 		this.strongPointsCSV = strongPoints;
-		updateHistory(this.strongPointsCSV);
+		//updateHistory(ImportCSV.mergeHash(this.strongPoints,this.strongPointsCSV));
+		//this.strongPoints.clear();
+		updateAll();
+//		this.strongPoints = ImportCSV.mergeHash(this.strongPoints, this.strongPointsFolder);
+//		this.strongPoints = ImportCSV.mergeHash(this.strongPoints, this.strongPointsSQL);
+//		this.strongPoints = ImportCSV.mergeHash(this.strongPoints, this.strongPointsCSV);
+	}
+	
+	/**
+	 * replace current Folderdatabase with new database and send to updateHistory.
+	 * @param strongPoints - database
+	 */
+	public void updateHistoryFolder(Hashtable<String, Networks> strongPoints) {
+		this.strongPointsFolder = strongPoints;
+		//updateHistory(ImportCSV.mergeHash(this.strongPoints,this.strongPointsFolder));
+		//this.strongPoints.clear();
+		updateAll();
+//		updateHistory(ImportCSV.mergeHash(this.strongPoints, this.strongPointsFolder));
+//		updateHistory(ImportCSV.mergeHash(this.strongPoints, this.strongPointsSQL));
+//		updateHistory(ImportCSV.mergeHash(this.strongPoints, this.strongPointsCSV));
+	}
+	
+	/**
+	 * replace current SQLdatabase with new database and send to updateHistory.
+	 * @param strongPoints - database
+	 */
+	public void updateHistorySQL(Hashtable<String, Networks> strongPoints) {
+		this.strongPointsSQL = strongPoints;
+		//updateHistory(ImportCSV.mergeHash(this.strongPoints,this.strongPointsSQL));
+		//this.strongPoints.clear();
+		updateAll();
+//		updateHistory(ImportCSV.mergeHash(this.strongPoints, this.strongPointsFolder));
+//		updateHistory(ImportCSV.mergeHash(this.strongPoints, this.strongPointsSQL));
+//		updateHistory(ImportCSV.mergeHash(this.strongPoints, this.strongPointsCSV));
+	}
+	
+	public void updateAll() {
+		//this.strongPoints.clear();
+		this.strongPoints = ImportCSV.mergeHash(this.strongPoints, this.strongPointsFolder);
+		this.strongPoints = ImportCSV.mergeHash(this.strongPoints, this.strongPointsSQL);
+		this.strongPoints = ImportCSV.mergeHash(this.strongPoints, this.strongPointsCSV);
+		//System.out.println(this.strongPoints.size());
 	}
 
 	/**

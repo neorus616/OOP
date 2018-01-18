@@ -9,7 +9,7 @@ package ui;
 
 import java.util.Hashtable;
 
-import Algorithms.EstimateLoc;
+import algorithms.EstimateLoc;
 import io.ExportCSV;
 import io.ExportKML;
 import io.ImportCSV;
