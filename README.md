@@ -28,11 +28,7 @@ After that, the Main GUI will open up to you
 
 ## Gui Instructions:
 ![My image](https://raw.githubusercontent.com/neorus616/OOP/master/OOPNew/GUI%20Instructions.png)
-- ![#1589F0](https://placehold.it/15/1589F0/000000?text=+) `#1589F0`
-```diff
-+ this will be highlighted in green
-- this will be highlighted in red
-```
+
 
 
 
