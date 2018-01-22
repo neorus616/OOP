@@ -35,7 +35,7 @@ dependencies{
 	compile fileTree(dir: 'lib', include: ['*.jar'])
 }
 
-task GUI(type:JavaExec) {
+task Menu(type:JavaExec) {
 	main "main.java.ui.MainMenuGui"
 	classpath sourceSets.main.runtimeClasspath
 }
