@@ -44,4 +44,5 @@ After that, the Main GUI will open up to you
 - [X] Add GUI
 - [X] Add UML
 - [X] Add Gradle
+- [X] Add SQL support
 - [X] Add Instrutions
