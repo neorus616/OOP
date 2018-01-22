@@ -2,10 +2,7 @@ package main.java.io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Hashtable;
-<<<<<<< HEAD
 
-=======
->>>>>>> branch 'master' of https://github.com/neorus616/OOP.git
 import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Folder;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
