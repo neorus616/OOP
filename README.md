@@ -28,11 +28,7 @@ After that, the Main GUI will open up to you
 
 ## Gui Instructions:
 ![My image](https://raw.githubusercontent.com/neorus616/OOP/master/OOPNew/GUI%20Instructions.png)
-- ![#1589F0](https://placehold.it/15/1589F0/000000?text=+) `#1589F0`
-```diff
-+ this will be highlighted in green
-- this will be highlighted in red
-```
+
 
 
 
@@ -44,7 +40,8 @@ After that, the Main GUI will open up to you
 - [X] Write README.md
 - [X] Add algorithms for Assigment 2 
 - [X] Write function to execute the algorithms
-- [ ] Rewrite the CSV reader to read for many purposes
 - [X] Change filter to interface implements
 - [X] Add GUI
 - [X] Add UML
+- [X] Add Gradle
+- [X] Add Instrutions
