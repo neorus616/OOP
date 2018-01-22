@@ -22,8 +22,17 @@ You can see the KML file on [Google Earth website](https://earth.google.com/web/
 To use the first algorithm to find approx location of AP, use the function EstimateLoc.apEstimateLoc with the parameters "Database path", "save path" and an int(how much similar AP points to check), for example EstimateLoc.apEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/MYAlgo1_BM2_4.csv", 4).<br>
 To use the second alghoritm to find approx location of user, use the function EstimateLoc.userEstimateLoc with the parameters "Database path", "user scan without gps", "save path", and an int(how much similar lines of AP points to check), for example EstimateLoc.userEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/_comb_no-GPS_TS2.csv" ,"TestCSVFilesForAssigment2//MYAlgo2_BM2_4.csv", 4).<br>
 
+## Gradle Instructions:
+To run the gradle tasks, open the main project folder, open cmd in that folder, and type "gradlew Menu" if you don't have gradle on your computer, or "gradle Menu" if you do.
+After that, the Main GUI will open up to you
+
 ## Gui Instructions:
 ![My image](https://raw.githubusercontent.com/neorus616/OOP/master/OOPNew/GUI%20Instructions.png)
+- ![#1589F0](https://placehold.it/15/1589F0/000000?text=+) `#1589F0`
+```diff
++ this will be highlighted in green
+- this will be highlighted in red
+```
 
 
 
