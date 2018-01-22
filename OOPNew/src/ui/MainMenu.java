@@ -9,7 +9,6 @@ package ui;
 
 import java.util.Hashtable;
 
-import algorithms.EstimateLoc;
 import io.ExportCSV;
 import io.ExportKML;
 import io.ImportCSV;
@@ -18,16 +17,16 @@ import wifi.Networks;
 
 public class MainMenu {
 
-	public static void main(String[] args){
-		// TODO Auto-generated method stub
-		
-		//readAndWriteComb("TestCSVFilesForAssigment1/","TestCSVFilesForAssigment1/VeryUpgradedCSV.csv");
-		//readAndWriteKML("TestCSVFilesForAssigment1/VeryUpgradedCSV.csv", "id = SHIELD Tablet", "TestCSVFilesForAssigment1/VeryUpgradedKML.kml");
-	
-		//EstimateLoc.apEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/MYAlgo1_BM2_4.csv", 4);
-		//EstimateLoc.userEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/_comb_no-GPS_TS2.csv" ,"TestCSVFilesForAssigment2//MYAlgo2_BM2_4.csv", 4);
-
-	}
+//	public static void main(String[] args){
+//		// TODO Auto-generated method stub
+//		
+//		//readAndWriteComb("TestCSVFilesForAssigment1/","TestCSVFilesForAssigment1/VeryUpgradedCSV.csv");
+//		//readAndWriteKML("TestCSVFilesForAssigment1/VeryUpgradedCSV.csv", "id = SHIELD Tablet", "TestCSVFilesForAssigment1/VeryUpgradedKML.kml");
+//	
+//		//EstimateLoc.apEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/MYAlgo1_BM2_4.csv", 4);
+//		//EstimateLoc.userEstimateLoc("TestCSVFilesForAssigment2/_comb_all_BM2_.csv","TestCSVFilesForAssigment2/_comb_no-GPS_TS2.csv" ,"TestCSVFilesForAssigment2//MYAlgo2_BM2_4.csv", 4);
+//
+//	}
 	
 	/**
 	 * Function for Assigment 2.
