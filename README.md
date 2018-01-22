@@ -1,12 +1,15 @@
 # OOP Project
 The main purpose of this project is to develop complex system that allows gathering geographic information,
 producing insights from this information and displaying the information in graphic tools.
-we will analyze info from a given CSV files to match the user conditions.
+we will analyze info from a given CSV file/s or SQL Server to match the user conditions.
 the CSV files that we analyze are from an android application called "WiGLE WiFi", the files contains parameters such as location(lat, lon and alt), time(in YYYY-MM-dd HH:mm:ss format), ID(model of the phone usually) and the WiFi AP points which contain the SSID, MAC address, frequency and signal strength.
 
 ## Libraries:
 Commons CSV by Apache Commons - http://commons.apache.org/proper/commons-csv/download_csv.cgi to read the CSV files. <br>
 JAK - https://labs.micromata.de/projects/jak/download.html to write a KML file(to use in Google Earth). <br>
+Papyrus - https://www.eclipse.org/papyrus/download.html to create UML. <br>
+MySQL connectors - https://dev.mysql.com/downloads/connector/j/5.1.html to connect to SQL server. <br>
+Window Builder \ Swing - https://www.eclipse.org/windowbuilder/download.php to create GUI. <br>
 
 ## Instructions:
 To create a combined CSV file, use the function readAndWriteComb(in MainMenu class) with the parameter "Folder path" and "Save path" (for example readAndWriteComb("TestCSVFilesForAssigment1/","TestCSVFilesForAssigment1/VeryUpgradedCSV.csv") ).<br>
