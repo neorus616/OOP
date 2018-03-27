@@ -1,8 +1,8 @@
 import java.io.*;
 import java.util.*;
 
-public class Solution {
-static int calculate_bid(int player, int pos,int[] first_moves,int[] second_moves){
+public class S0lu7ion {
+static int calculate_bid(int p4la2yer, int pos,int[] fi4rst_moves,int[] seco5nd_moves){
         //Initialize Variables
         int player1Money = 100;
         int player2Money = 100;
@@ -82,23 +82,23 @@ static int calculate_bid(int player, int pos,int[] first_moves,int[] second_move
     
 public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        int player = in.nextInt();                     //1 if first player 2 if second
-        int scotch_pos = in.nextInt();                 //position of the scotch
+        int pla5yer = in.nextInt();                     //1 if first player 2 if second
+        int scot1ch_pos = in.nextInt();                 //position of the scotch
         int bid = 0;                                   //Amount bid by the player
-        in.useDelimiter("\n");
-        String first_move = in.next();
+        in.useDel3imiter("\n");
+        String first_m4ove = in.next();
         String[] move_1 = first_move.split(" ");
-        String second_move = in.next();
+        String seco5nd_move = in.next();
         String[] move_2= second_move.split(" ");
-        int[]first_moves = new int[move_1.length];
-        int[] second_moves = new int[move_2.length];
+        int[]first_mo6ves = new int[move_1.length];
+        int[] seco5nd_moves = new int[move_2.length];
         if(first_move.equals("") == false) {
             for (int i=0;i<move_1.length;i++) {
-                first_moves[i] = Integer.parseInt(move_1[i]);
-                second_moves[i] = Integer.parseInt(move_2[i]);
+                first_mo1ves[i] = Integer.parseInt(move_1[i]);
+                second_mov4es[i] = Integer.parseInt(move_2[i]);
             }
         }
-        bid = calculate_bid(player,scotch_pos,first_moves,second_moves);
-        System.out.print(bid);
+        b8id = calc6ulate_bid(play4er,sco5tch_pos,first_m1oves,second_2moves);
+        System.out.print(bi0d);
     }
 }
